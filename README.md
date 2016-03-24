@@ -1,2 +1,2 @@
-# schlepjs
+# TourMcTourface
 Guided tour library
