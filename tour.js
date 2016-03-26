@@ -23,10 +23,11 @@ Tour.prototype.start = function () {
 
 Tour.prototype.createContainer = function () {
     $('body')
-        .append(`<div class="tour-container">
+        .append(`
+            <div class="tour-container">
                 <div class="tour-content"></div>
             </div>
-            <svg class="tour-arrow" width="200" height="220">
+            <svg class="tour-arrow" width="100" height="110">
             <defs>
                 <marker id="markerArrow"
                     viewBox="0 0 10 10"
@@ -37,10 +38,12 @@ Tour.prototype.createContainer = function () {
                     <path d="M 10 10 L 0 5 L 10 0"/>
                 </marker>
             </defs>
-            <path d="M10,10 C20,200 90,220 200,218"
+            <path d="M5,2 C20,100 30,110 100,108"
+                class="tour-arrow-path"
                 style="marker-start: url(#markerArrow);"/>
             </svg>
             `);
+    this.markerWidth = 6;
 };
 
 Tour.prototype.createOverlay = function () {
@@ -115,8 +118,8 @@ Step.prototype.positionOverlay = function () {
 
 Step.prototype.positionContent = function () {
     $('.tour-container').css({
-        top: this.position.top + 200,
-        left: this.position.left + 200
+        top: this.position.bottom+ 84,
+        left: this.position.left + 140
     });
     return this;
 };
@@ -133,11 +136,10 @@ Step.prototype.setTarget = function () {
 };
 
 Step.prototype.positionArrow = function () {
-    var arrowAdjust = 16;
-    var left = Math.round(this.position.left + (this.position.width / 2)) - arrowAdjust;
+    var left = this.position.left + (this.position.width/ 2.0) - this.tour.markerWidth;
     $('.tour-arrow').css({
         left: left,
-        top: this.position.bottom + 10
+        top: this.position.bottom + 5
     });
 
     return this;
@@ -151,6 +153,7 @@ Step.prototype.setPosition = function () {
     this.position.height = this.element.outerHeight();
     this.position.right = this.position.left + this.position.width;
     this.position.bottom = this.position.top + this.position.height;
+    console.log('setPosition:', this.position);
     return this;
 };
 
@@ -167,11 +170,15 @@ Step.prototype.on = function () {
     $(window).on('resize', function () {
         self.setPosition()
             .positionOverlay()
-            .positionArrow();
+            .positionArrow()
+            .positionContent()
+            ;
     }).on('scroll', function () {
         self.setPosition()
             .positionOverlay()
-            .positionArrow();
+            .positionArrow()
+            .positionContent()
+            ;
     });
 
 

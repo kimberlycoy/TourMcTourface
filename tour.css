@@ -10,7 +10,6 @@
     z-index: 100;
     position: fixed;
     background: rgba(0, 0, 0, 0.6);
-    /*background: rgba(255,255,255,0.6);*/
 }
 
 .tour-container {
@@ -22,7 +21,6 @@
     padding: 20px;
     text-align: center;
     max-width: 500px;
-    background-color: blue;
 }
 
 .tour-arrow {
