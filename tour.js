@@ -34,11 +34,11 @@ Tour.prototype.createContainer = function () {
                     markerWidth="6"
                     markerHeight="6"
                     orient="auto">
-                    <path d="M 10 10 L 0 5 L 10 0" style="fill:none; stroke:#FFF;" />
+                    <path d="M 10 10 L 0 5 L 10 0"/>
                 </marker>
             </defs>
             <path d="M10,10 C20,200 90,220 200,218"
-                style="fill:none; stroke:#FFF; stroke-width:2px; marker-start: url(#markerArrow);"/>
+                style="marker-start: url(#markerArrow);"/>
             </svg>
             `);
 };
@@ -175,11 +175,14 @@ Step.prototype.on = function () {
     });
 
 
-    $(document).off(this.event, this.selector);
-    $(document).on(this.event, this.selector, function (event) {
-        console.log('step.on:', event);
-        self.tour.next();
-    });
+    $(document)
+        .off(this.event, this.selector)
+        .on(this.event, this.selector, function (event) {
+            console.log('step.on:', event);
+            self.tour.next();
+        })
+        .scrollTo(this.element, 800)
+        ;
 
     return this;
 };
