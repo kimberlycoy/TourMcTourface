@@ -181,7 +181,9 @@ Step.prototype.on = function () {
             console.log('step.on:', event);
             self.tour.next();
         })
-        .scrollTo(this.element, 800)
+        .scrollTo(this.element, 800, {
+            offset: {top: -10},
+        })
         ;
 
     return this;
