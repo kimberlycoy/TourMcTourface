@@ -33,6 +33,10 @@
     stroke-width:2px;
 }
 
+.tour-container .tour-next {
+    display: none;
+}
+
 .tour-content {
     width: 100%;
 }

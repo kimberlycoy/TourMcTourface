@@ -22,10 +22,14 @@ Tour.prototype.start = function () {
 };
 
 Tour.prototype.createContainer = function () {
+    var self = this;
     $('body')
         .append(`
             <div class="tour-container">
                 <div class="tour-content"></div>
+                <div class="tour-buttons">
+                    <button class="tour-next">Next</button>
+                </div>
             </div>
             <svg class="tour-arrow" width="100" height="110">
             <defs>
@@ -44,6 +48,13 @@ Tour.prototype.createContainer = function () {
             </svg>
             `);
     this.markerWidth = 6;
+    this.nextButton = $('.tour-next').on('click', function (e) {
+        self.next();
+    });
+};
+
+Tour.prototype.showNext = function (show) {
+    show ? this.nextButton.show() : this.nextButton.hide();
 };
 
 Tour.prototype.createOverlay = function () {
@@ -68,6 +79,7 @@ Tour.prototype.createOverlay = function () {
 Tour.prototype.next = function () {
     if (this.currentStep) this.currentStep.off();
     this.i++;
+    console.log('next, i:', this.i);
     this.currentStep = new Step(this.steps[this.i], this).on();
 };
 
@@ -181,7 +193,6 @@ Step.prototype.on = function () {
             ;
     });
 
-
     $(document)
         .off(this.event, this.selector)
         .on(this.event, this.selector, function (event) {
@@ -192,6 +203,9 @@ Step.prototype.on = function () {
             offset: {top: -10},
         })
         ;
+
+    // show/hide next button
+    this.tour.showNext(this.showNext || this.event.toLowerCase() === 'next')
 
     return this;
 };

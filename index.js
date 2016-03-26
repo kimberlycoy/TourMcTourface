@@ -3,8 +3,7 @@ $(function() {
     $('.one').draggable();
 
     var steps = [{
-        event: 'click',
-        //event: 'dragstart',
+        event: 'next',
         selector: '.one',
         content: "I'm at one! and a bit longer longer, and much longer",
         title: "The Title"
