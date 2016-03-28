@@ -136,8 +136,9 @@ Step.prototype.positionContent = function () {
         });
     } else {
         $('.tour-container').css({
-            top: 0,
-            left: 0
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
         });
     }
     return this;
