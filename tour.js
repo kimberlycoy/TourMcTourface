@@ -146,7 +146,7 @@ Step.prototype.positionContent = function () {
 };
 
 Step.prototype.setContent = function () {
-    $('.tour-content').html(this.content);
+    $('.tour-content').html(this.content || this.description);
     return this;
 };
 
@@ -181,7 +181,6 @@ Step.prototype.setPosition = function () {
     } else {
         this.position = { top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0 };
     }
-    console.log('setPosition:', this.position);
     return this;
 };
 
@@ -207,9 +206,8 @@ Step.prototype.on = function () {
             .positionContent();
     });
 
-    if (this.selector) {
+    if (this.element) {
         $(document)
-            .off(this.event, this.selector)
             .on(this.event, this.selector, function (event) {
                 console.log('step.on:', event);
                 self.tour.next();
@@ -217,6 +215,12 @@ Step.prototype.on = function () {
             .scrollTo(this.element, 800, {
                 offset: { top: -10 },
             });
+    } else {
+        $(document)
+            .on(this.event, function (event) {
+                console.log('step.on:', event);
+                self.tour.next();
+            })
     }
 
     // show/hide next button

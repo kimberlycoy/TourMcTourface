@@ -2,16 +2,26 @@ $(function() {
 
     $('.one').draggable();
 
-    var steps = [{
-        event: 'next',
-        content: 'Welcome'
+    var steps = [
+    {
+        event: 'custom.event',
+        // Both "description" and "content" work.
+        description: `
+            <h1>I'm a custom event</h1> <i>(w/html)!</i>
+            <div style="margin-top: 20px; font-size: small;">
+                Trigger me with <br>
+                <code>$(document).trigger('custom.event');</code>
+            </div>
+            `
     },{
         event: 'next',
+        content: 'Welcome, click next'
+    },{
+        event: 'dragstart',
         selector: '.one',
-        content: "I'm at one! and a bit longer longer, and much longer"
+        content: "Drag me"
     }, {
         event: 'click',
-        //event: 'dragstart',
         selector: '.two',
         content: "I'm at two!"
     }, {
