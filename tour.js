@@ -132,7 +132,8 @@ Step.prototype.positionContent = function () {
     if (this.selector) {
         $('.tour-container').css({
             top: this.position.bottom + 84,
-            left: this.position.left + 140
+            left: this.position.left + 140,
+            transform: ''
         });
     } else {
         $('.tour-container').css({
