@@ -129,10 +129,17 @@ Step.prototype.positionOverlay = function () {
 
 
 Step.prototype.positionContent = function () {
-    $('.tour-container').css({
-        top: this.position.bottom+ 84,
-        left: this.position.left + 140
-    });
+    if (this.selector) {
+        $('.tour-container').css({
+            top: this.position.bottom + 84,
+            left: this.position.left + 140
+        });
+    } else {
+        $('.tour-container').css({
+            top: 0,
+            left: 0
+        });
+    }
     return this;
 };
 
@@ -142,13 +149,16 @@ Step.prototype.setContent = function () {
 };
 
 Step.prototype.setTarget = function () {
+    if (!this.selector) return this;
     this.element = $(this.selector);
     this.element.addClass('tour-target');
     return this;
 };
 
 Step.prototype.positionArrow = function () {
-    var left = this.position.left + (this.position.width/ 2.0) - this.tour.markerWidth;
+    if (!this.selector) return this;
+
+    var left = this.position.left + (this.position.width / 2.0) - this.tour.markerWidth;
     $('.tour-arrow').css({
         left: left,
         top: this.position.bottom + 5
@@ -158,13 +168,17 @@ Step.prototype.positionArrow = function () {
 };
 
 Step.prototype.setPosition = function () {
-    this.position = this.element.offset();
-    this.position.top = this.position.top - $(window).scrollTop();
-    this.position.left = this.position.left - $(window).scrollLeft();
-    this.position.width = this.element.outerWidth();
-    this.position.height = this.element.outerHeight();
-    this.position.right = this.position.left + this.position.width;
-    this.position.bottom = this.position.top + this.position.height;
+    if (this.element) {
+        this.position = this.element.offset();
+        this.position.top = this.position.top - $(window).scrollTop();
+        this.position.left = this.position.left - $(window).scrollLeft();
+        this.position.width = this.element.outerWidth();
+        this.position.height = this.element.outerHeight();
+        this.position.right = this.position.left + this.position.width;
+        this.position.bottom = this.position.top + this.position.height;
+    } else {
+        this.position = { top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0 };
+    }
     console.log('setPosition:', this.position);
     return this;
 };
@@ -183,26 +197,25 @@ Step.prototype.on = function () {
         self.setPosition()
             .positionOverlay()
             .positionArrow()
-            .positionContent()
-            ;
+            .positionContent();
     }).on('scroll', function () {
         self.setPosition()
             .positionOverlay()
             .positionArrow()
-            .positionContent()
-            ;
+            .positionContent();
     });
 
-    $(document)
-        .off(this.event, this.selector)
-        .on(this.event, this.selector, function (event) {
-            console.log('step.on:', event);
-            self.tour.next();
-        })
-        .scrollTo(this.element, 800, {
-            offset: {top: -10},
-        })
-        ;
+    if (this.selector) {
+        $(document)
+            .off(this.event, this.selector)
+            .on(this.event, this.selector, function (event) {
+                console.log('step.on:', event);
+                self.tour.next();
+            })
+            .scrollTo(this.element, 800, {
+                offset: { top: -10 },
+            });
+    }
 
     // show/hide next button
     this.tour.showNext(this.showNext || this.event.toLowerCase() === 'next')
@@ -211,5 +224,6 @@ Step.prototype.on = function () {
 };
 
 Step.prototype.off = function () {
+    if (!this.element) return this;
     this.element.removeClass('tour-target');
 }
