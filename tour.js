@@ -22,20 +22,39 @@ Tour.prototype.start = function () {
 };
 
 Tour.prototype.createContainer = function () {
+    var self = this;
     $('body')
-        .append(`<div class="tour-container">
-        		<div class="tour-content"></div>
-        	</div>
-        	<svg class="tour-arrow" width="200" height="220">
-        	<defs>
-        	    <marker id="markerArrow" markerWidth="13" markerHeight="13" refX="9" refY="6" orient="auto-start-reverse">
-                    <path d="M2,10 L10,6 L2,2" style="fill:none; stroke:#FFF" />
+        .append(`
+            <div class="tour-container">
+                <div class="tour-content"></div>
+                <div class="tour-buttons">
+                    <button class="tour-next">Next</button>
+                </div>
+            </div>
+            <svg class="tour-arrow" width="100" height="110">
+            <defs>
+                <marker id="markerArrow"
+                    viewBox="0 0 10 10"
+                    refX="1" refY="5"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto">
+                    <path d="M 10 10 L 0 5 L 10 0"/>
                 </marker>
-        	</defs>
-        	<path d="M10,10 C20,200 90,220 200,218"
-        		style="fill:none; stroke:#FFF; stroke-width:2px; marker-start: url(#markerArrow);"/>
-			</svg>
-        	`);
+            </defs>
+            <path d="M5,2 C20,100 30,110 100,108"
+                class="tour-arrow-path"
+                style="marker-start: url(#markerArrow);"/>
+            </svg>
+            `);
+    this.markerWidth = 6;
+    this.nextButton = $('.tour-next').on('click', function (e) {
+        self.next();
+    });
+};
+
+Tour.prototype.showNext = function (show) {
+    show ? this.nextButton.show() : this.nextButton.hide();
 };
 
 Tour.prototype.createOverlay = function () {
@@ -60,6 +79,7 @@ Tour.prototype.createOverlay = function () {
 Tour.prototype.next = function () {
     if (this.currentStep) this.currentStep.off();
     this.i++;
+    console.log('next, i:', this.i);
     this.currentStep = new Step(this.steps[this.i], this).on();
 };
 
@@ -110,8 +130,8 @@ Step.prototype.positionOverlay = function () {
 
 Step.prototype.positionContent = function () {
     $('.tour-container').css({
-        top: this.position.top + 200,
-        left: this.position.left + 200
+        top: this.position.bottom+ 84,
+        left: this.position.left + 140
     });
     return this;
 };
@@ -128,11 +148,10 @@ Step.prototype.setTarget = function () {
 };
 
 Step.prototype.positionArrow = function () {
-    var arrowAdjust = 16;
-    var left = Math.round(this.position.left + (this.position.width / 2)) - arrowAdjust;
+    var left = this.position.left + (this.position.width/ 2.0) - this.tour.markerWidth;
     $('.tour-arrow').css({
         left: left,
-        top: this.position.bottom + 10
+        top: this.position.bottom + 5
     });
 
     return this;
@@ -146,6 +165,7 @@ Step.prototype.setPosition = function () {
     this.position.height = this.element.outerHeight();
     this.position.right = this.position.left + this.position.width;
     this.position.bottom = this.position.top + this.position.height;
+    console.log('setPosition:', this.position);
     return this;
 };
 
@@ -162,19 +182,30 @@ Step.prototype.on = function () {
     $(window).on('resize', function () {
         self.setPosition()
             .positionOverlay()
-            .positionArrow();
+            .positionArrow()
+            .positionContent()
+            ;
     }).on('scroll', function () {
         self.setPosition()
             .positionOverlay()
-            .positionArrow();
+            .positionArrow()
+            .positionContent()
+            ;
     });
 
+    $(document)
+        .off(this.event, this.selector)
+        .on(this.event, this.selector, function (event) {
+            console.log('step.on:', event);
+            self.tour.next();
+        })
+        .scrollTo(this.element, 800, {
+            offset: {top: -10},
+        })
+        ;
 
-    $(document).off(this.event, this.selector);
-    $(document).on(this.event, this.selector, function (event) {
-        console.log('step.on:', event);
-        self.tour.next();
-    });
+    // show/hide next button
+    this.tour.showNext(this.showNext || this.event.toLowerCase() === 'next')
 
     return this;
 };

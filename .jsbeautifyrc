@@ -1,0 +1,9 @@
+{
+    "css": {
+        "newline_between_rules": true
+    },
+    "js": {
+        "space_after_anon_function": true,
+        "space_after_anon_function": true
+    }
+}

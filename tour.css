@@ -10,7 +10,6 @@
     z-index: 100;
     position: fixed;
     background: rgba(0, 0, 0, 0.6);
-    /*background: rgba(255,255,255,0.6);*/
 }
 
 .tour-container {
@@ -21,26 +20,26 @@
     font-size: larger;
     padding: 20px;
     text-align: center;
-    /*background-color: blue;*/
     max-width: 500px;
 }
 
 .tour-arrow {
     z-index: 200;
     position: fixed;
-    /*background-color: rgba(0,0,0,0.2);*/
-/*    height: 100px;
-    wdith: auto;
-*/}
+}
+.tour-arrow path {
+    fill:none;
+    stroke:#FFF;
+    stroke-width:2px;
+}
+
+.tour-container .tour-next {
+    display: none;
+}
 
 .tour-content {
     width: 100%;
 }
 
 .tour-target {
-/*        outline: #66afe9 solid 2px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-    -webkit-moz-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-*/
 }
