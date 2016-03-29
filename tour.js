@@ -79,13 +79,26 @@ Tour.prototype.createContainer = function () {
 };
 
 Tour.prototype.next = function () {
-    // Turn off previous step
     if (this.currentStep) this.currentStep.off();
-
     this.i++;
+    if (this.i < this.steps.length) {
+        this.currentStep = new Step(this.steps[this.i], this).on();
+    } else {
+        this.stop();
+    }
+};
 
-    this.currentStep = new Step(this.steps[this.i], this).on();
-
+Tour.prototype.stop = function () {
+    var self = this;
+    this.$container.css({ opacity: 0 });
+    this.$arrow.css({ opacity: 0 });
+    $('.tour-overlay').css({ opacity: 0 });
+    setTimeout(function () {
+        self.$document = $(document).trigger('tour.stop', 'stop', this);
+        self.$container.remove();
+        self.$arrow.remove();
+        $('.tour-overlay').remove();
+    }, 2000);
 };
 
 Tour.prototype.showNext = function (show) {
@@ -368,7 +381,8 @@ Step.prototype.on = function () {
     }, this.timeout || this.transitionDuration());
 
     setTimeout(function () {
-        $('.tour-container, .tour-arrow').addClass('tour-display-on');
+        self.tour.$container.addClass('tour-display-on');
+        if (self.selector) self.tour.$arrow.addClass('tour-display-on');
         self.init();
     }, self.timeout || 0);
 
@@ -388,4 +402,4 @@ Step.prototype.off = function () {
         this.element.removeClass('tour-target');
     }
     return this;
-}
+};
