@@ -1,6 +1,6 @@
 function Tour(options) {
     this.options = {
-        margin: 5,
+        margin: 0,
         scrollTo: {
             duration: 800,
             offset: { top: -10 },
@@ -324,7 +324,10 @@ Step.prototype.on = function () {
             self.tour.next();
         };
 
-        this.tour.$document.on(this.event, this.selector, this.eventListener);
+        this.tour.$document.on(
+            this.event, 
+            this.event_type === 'custom' ? undefined : this.selector, 
+            this.eventListener);
     }
 
     // show/hide next button

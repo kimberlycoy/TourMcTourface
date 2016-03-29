@@ -7,7 +7,7 @@
 }
 
 .tour-container {
-    z-index: 200;
+    z-index: 201;
     position: fixed;
     color: white;
     font-weight: bold;
@@ -19,7 +19,7 @@
 }
 
 .tour-arrow {
-    z-index: 200;
+    z-index: 201;
     position: fixed;
     opacity: 0;
 }
