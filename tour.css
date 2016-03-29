@@ -25,18 +25,18 @@
 }
 
 .tour-arrow path {
-    fill:none;
-    stroke:#FFF;
-    stroke-width:2px;
+    fill: none;
+    stroke: #FFF;
+    stroke-width: 2px;
 }
 
 .tour-display-on {
-    transition: opacity 1s;
+    transition: opacity 1.2s ease;
     opacity: 1;
 }
 
 .tour-transition {
-    transition: all 0.5s; 
+    transition: all 0.8s ease; 
 }
 
 .tour-container .tour-next {

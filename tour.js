@@ -79,21 +79,13 @@ Tour.prototype.createContainer = function () {
 };
 
 Tour.prototype.next = function () {
-    $('.tour-container, .tour-arrow').removeClass('tour-display-on');
-
-    if (this.currentStep) {
-        this.currentStep.off();
-        $('.tour-overlay').addClass('tour-transition');
-    }
+    // Turn off previous step
+    if (this.currentStep) this.currentStep.off();
 
     this.i++;
 
     this.currentStep = new Step(this.steps[this.i], this).on();
 
-    $('.tour-container, .tour-arrow').addClass('tour-display-on');
-    setTimeout(function () {
-        $('.tour-overlay').removeClass('tour-transition');
-    }, 250);
 };
 
 Tour.prototype.showNext = function (show) {
@@ -237,7 +229,6 @@ Step.prototype.positionArrow = function () {
         containerPosition.description = this.tour.$container.data('position');
 
         var css = {
-            opacity: 1,
             top: this.position.bottom + this.getMargin(),
             left: this.position.center.left - this.tour.markerWidth,
             right: 'auto'
@@ -290,10 +281,50 @@ Step.prototype.initScrollTo = function () {
     }, scrollTo.delay);
 }
 
-Step.prototype.on = function () {
+Step.prototype.initScroll = function () {
     var self = this;
 
-    this.tour.$document.arrive(this.selector || 'body', {
+    if (this.selector) {
+        this.scrollListener = function () {
+            self.setView()
+                .setPosition()
+                .positionOverlay()
+                .positionContent()
+                .positionArrow();
+        };
+        this.tour.$window.on('resize', self.scrollListener).on('scroll', self.scrollListener);
+    }
+
+    return this;
+};
+
+Step.prototype.initEvent = function () {
+    var self = this;
+
+    if (event !== 'next') {
+        this.eventListener = function (event) {
+            self.tour.next();
+        };
+
+        this.tour.$document.on(
+            this.event,
+            this.event_type === 'custom' ? undefined : this.selector,
+            this.eventListener);
+    }
+
+    return this;
+};
+
+Step.prototype.initNext = function () {
+    // show/hide next button
+    this.tour.showNext(this.showNext || this.event.toLowerCase() === 'next')
+    return this;
+};
+
+Step.prototype.init = function () {
+    var self = this;
+
+    self.tour.$document.arrive(self.selector || 'body', {
         existing: true,
         onceOnly: true
     }, function () {
@@ -308,36 +339,47 @@ Step.prototype.on = function () {
         self.initScrollTo();
     });
 
-    if (this.selector) {
-        this.scrollListener = function () {
-            self.setView()
-                .setPosition()
-                .positionOverlay()
-                .positionContent()
-                .positionArrow();
-        };
-        this.tour.$window.on('resize', self.scrollListener).on('scroll', self.scrollListener);
+    self.initScroll()
+        .initEvent()
+        .initNext();
+
+    return this;
+};
+
+Step.prototype.transitionDuration = function () {
+    if (!this._transitionDuration) {
+        this._transitionDuration = 250;
+        var duration = $('.tour-overlay').css('transition-duration');
+        var bits = duration.split('s');
+        if (bits.length > 1) {
+            this._transitionDuration = parseFloat(bits[0]) * 1000;
+        } else if (bits.length > 0) {
+            this._transitionDuration = parseInt(duration);
+        }
     }
+    return this._transitionDuration;
+};
 
-    if (event !== 'next') {
-        this.eventListener = function (event) {
-            self.tour.next();
-        };
+Step.prototype.on = function () {
+    var self = this;
 
-        this.tour.$document.on(
-            this.event, 
-            this.event_type === 'custom' ? undefined : this.selector, 
-            this.eventListener);
-    }
+    setTimeout(function () {
+        $('.tour-overlay').removeClass('tour-transition');
+    }, this.timeout || this.transitionDuration());
 
-    // show/hide next button
-    this.tour.showNext(this.showNext || this.event.toLowerCase() === 'next')
+    setTimeout(function () {
+        $('.tour-container, .tour-arrow').addClass('tour-display-on');
+        self.init();
+    }, self.timeout || 0);
 
     return this;
 };
 
 Step.prototype.off = function () {
     this.tour.$document.trigger('tour.step.next', ['step.next', this.tour, this]);
+
+    $('.tour-container, .tour-arrow').removeClass('tour-display-on');
+    $('.tour-overlay').addClass('tour-transition');
 
     if (this.eventListener) this.tour.$document.off(this.event, this.selector, this.eventListener);
     if (this.scrollListener) this.tour.$window.off('resize', this.scrollListener).off('scroll', this.scrollListener);
