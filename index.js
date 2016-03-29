@@ -19,7 +19,7 @@ $(function () {
         }, {
         event: 'dragstart',
         selector: '.one-drag',
-        content: "Drag me",
+        content: "Drag me. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nunc massa, imperdiet consectetur nisl eu, condimentum egestas eros. Nulla efficitur ornare justo ut luctus. Quisque efficitur rhoncus odio at venenatis. Cras mattis malesuada lacus et tristique. In porta hendrerit elit id placerat.",
         margin: 0
     }, {
         event: 'drop',
@@ -33,13 +33,17 @@ $(function () {
     }, {
         event: 'next',
         selector: '.three',
-        content: "Three"
+        content: "Three. Aenean faucibus lobortis orci quis ullamcorper. Pellentesque nec faucibus massa, eget consequat arcu. Quisque hendrerit sapien congue metus iaculis, eu interdum mauris luctus. Vivamus non fermentum magna, eu pulvinar nibh. Donec eleifend at leo sit amet vulputate. Donec vel vehicula nibh. "
+    }, {
+        event: 'next',
+        selector: '.four',
+        content: "Four"
     }];
 
     var tour = new Tour({
         steps: steps
     });
-    
+
     tour.on('step.next', function (e, tour, step) {
         console.log('event:', e, tour, step);
     });
