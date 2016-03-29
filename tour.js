@@ -168,7 +168,6 @@ Step.prototype.positionOverlay = function () {
 Step.prototype.setView = function () {
     this.view = {};
     $.extend(this.view, this.tour.$body[0].getBoundingClientRect());
-    this.view.top = this.tour.$window.scrollTop();
     this.view.bottom = this.view.top + this.view.height;
     this.view.widthHalf = this.view.width / 2.0;
     return this;
