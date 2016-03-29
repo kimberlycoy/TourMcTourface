@@ -1,8 +1,14 @@
 //var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
 function Tour(options) {
-    this.options = {};
-    $.extend(this.options, options);
+    this.options = {
+        scrollTo: {
+            duration: 800,
+            offset: { top: -10 },
+            display: 500
+        }
+    };
+    $.extend(true, this.options, options);
 
     this.i = -1;
     this.steps = this.options.steps;
@@ -58,7 +64,6 @@ Tour.prototype.showNext = function (show) {
 };
 
 Tour.prototype.createOverlay = function () {
-    console.log('createOverlay:', this.overlay);
     var div = '<div class="tour-overlay"></div>';
     this.overlay = {
         top: $(div),
@@ -77,10 +82,21 @@ Tour.prototype.createOverlay = function () {
 };
 
 Tour.prototype.next = function () {
-    if (this.currentStep) this.currentStep.off();
+    $('.tour-container, .tour-arrow').removeClass('tour-display-on');
+
+    if (this.currentStep) {
+        this.currentStep.off();
+        $('.tour-overlay').addClass('tour-transition');
+    }
+
     this.i++;
-    console.log('next, i:', this.i);
+
     this.currentStep = new Step(this.steps[this.i], this).on();
+
+    $('.tour-container, .tour-arrow').addClass('tour-display-on');
+    setTimeout(function () {
+        $('.tour-overlay').removeClass('tour-transition');
+    }, 250);
 };
 
 
@@ -91,23 +107,24 @@ function Step(data, tour) {
 }
 
 Step.prototype.positionOverlay = function () {
+
     var max = {
         height: $(window).height(),
         width: $(document).outerWidth()
     };
+
+    this.overlay.bottom.css({
+        top: this.position.bottom,
+        left: this.position.left,
+        height: max.height,
+        width: this.position.width
+    });
 
     this.overlay.top.css({
         top: 0,
         left: 0,
         height: this.position.top,
         width: "100%"
-    });
-
-    this.overlay.left.css({
-        top: this.position.top,
-        left: 0,
-        height: $(window).height(),
-        width: this.position.left
     });
 
     this.overlay.right.css({
@@ -117,11 +134,11 @@ Step.prototype.positionOverlay = function () {
         width: max.width
     });
 
-    this.overlay.bottom.css({
-        top: this.position.bottom,
-        left: this.position.left,
-        height: max.height,
-        width: this.position.width
+    this.overlay.left.css({
+        top: this.position.top,
+        left: 0,
+        height: $(window).height(),
+        width: this.position.left
     });
 
     return this;
@@ -152,8 +169,10 @@ Step.prototype.setContent = function () {
 
 Step.prototype.setTarget = function () {
     if (!this.selector) return this;
+
     this.element = $(this.selector);
     this.element.addClass('tour-target');
+
     return this;
 };
 
@@ -184,8 +203,19 @@ Step.prototype.setPosition = function () {
     return this;
 };
 
+Step.prototype.initScrollTo = function () {
+    if (this.scrollTo === false) return this;
+
+    var self = this;
+    var scrollTo = this.tour.options.scrollTo;
+    $.extend(scrollTo, $.isPlainObject(self.scrollTo) ? self.scrollTo : {});
+
+    setTimeout(function () {
+        $(document).scrollTo(self.element, scrollTo);
+    }, scrollTo.delay);
+}
+
 Step.prototype.on = function () {
-    console.log('step.on:', this);
     this.setTarget()
         .setPosition()
         .positionOverlay()
@@ -207,20 +237,14 @@ Step.prototype.on = function () {
     });
 
     if (this.element) {
-        $(document)
-            .on(this.event, this.selector, function (event) {
-                console.log('step.on:', event);
-                self.tour.next();
-            })
-            .scrollTo(this.element, 800, {
-                offset: { top: -10 },
-            });
+        $(document).on(this.event, this.selector, function (event) {
+            self.tour.next();
+        });
+        self.initScrollTo();
     } else {
-        $(document)
-            .on(this.event, function (event) {
-                console.log('step.on:', event);
-                self.tour.next();
-            })
+        $(document).on(this.event, function (event) {
+            self.tour.next();
+        });
     }
 
     // show/hide next button

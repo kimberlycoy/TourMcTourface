@@ -1,9 +1,9 @@
-$(function() {
+$(function () {
 
-    $('.one').draggable();
+    $('.one-drag').draggable();
+    $('.one-drop').droppable();
 
-    var steps = [
-    {
+    var steps = [{
         event: 'custom.event',
         // Both "description" and "content" work.
         description: `
@@ -13,20 +13,24 @@ $(function() {
                 <code>$(document).trigger('custom.event');</code>
             </div>
             `
-    },{
+    }, {
         event: 'next',
         content: 'Welcome, click next'
-    },{
+    }, {
         event: 'dragstart',
-        selector: '.one',
+        selector: '.one-drag',
         content: "Drag me"
+    }, {
+        event: 'drop',
+        selector: '.one-drop',
+        content: "Drop Here",
+        scrollTo: false
     }, {
         event: 'click',
         selector: '.two',
         content: "I'm at two!"
     }, {
-        event: 'click',
-        //event: 'dragstart',
+        event: 'next',
         selector: '.three',
         content: "Three"
     }];

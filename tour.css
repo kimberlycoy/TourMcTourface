@@ -1,11 +1,5 @@
 .tour-on {}
 
-.one {
-    display: inline-block;
-    padding: 20px;
-    cursor: pointer;
-}
-
 .tour-overlay {
     z-index: 100;
     position: fixed;
@@ -21,16 +15,28 @@
     padding: 20px;
     text-align: center;
     max-width: 500px;
+    opacity: 0;
 }
 
 .tour-arrow {
     z-index: 200;
     position: fixed;
+    opacity: 0;
 }
+
 .tour-arrow path {
     fill:none;
     stroke:#FFF;
     stroke-width:2px;
+}
+
+.tour-display-on {
+    transition: opacity 1s;
+    opacity: 1;
+}
+
+.tour-transition {
+    transition: all 0.5s; 
 }
 
 .tour-container .tour-next {
@@ -43,3 +49,4 @@
 
 .tour-target {
 }
+
