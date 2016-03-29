@@ -13,8 +13,18 @@ function Tour(options) {
     this.steps = this.options.steps;
     delete this.options.steps;
 
-    console.log('Tour.config:', this);
+    $(document).trigger('tour.start', 'start', this);
 }
+
+Tour.prototype.on = function (event, handler) {
+    $(document).on('tour.' + event, function (e, event, tour, step) {
+        (handler || $.noop)(event, tour, step);
+    });
+};
+
+Tour.prototype.off = function (event, handler) {
+    $(document).off('tour.' + event, handler);
+};
 
 Tour.prototype.start = function () {
     console.log('Tour.start');
@@ -145,7 +155,6 @@ Step.prototype.positionOverlay = function () {
     return this;
 };
 
-
 Step.prototype.positionContent = function () {
     if (this.selector) {
         $('.tour-container').css({
@@ -217,6 +226,7 @@ Step.prototype.initScrollTo = function () {
 }
 
 Step.prototype.on = function () {
+    $(document).trigger('tour.step.start', ['step.start', this.tour, this]);
     this.setTarget()
         .setPosition()
         .positionOverlay()
@@ -255,6 +265,7 @@ Step.prototype.on = function () {
 };
 
 Step.prototype.off = function () {
+    $(document).trigger('tour.step.next', ['step.next', this.tour, this]);
     if (!this.element) return this;
     this.element.removeClass('tour-target');
 }
