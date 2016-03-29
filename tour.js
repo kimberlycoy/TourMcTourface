@@ -28,6 +28,10 @@ Tour.prototype.off = function (event, handler) {
     this.$document.off('tour.' + event, handler);
 };
 
+Tour.prototype.trigger = function (event) {
+    this.$document.trigger(event);
+};
+
 Tour.prototype.start = function () {
     console.log('Tour.start');
 
@@ -74,6 +78,24 @@ Tour.prototype.createContainer = function () {
     });
 };
 
+Tour.prototype.next = function () {
+    $('.tour-container, .tour-arrow').removeClass('tour-display-on');
+
+    if (this.currentStep) {
+        this.currentStep.off();
+        $('.tour-overlay').addClass('tour-transition');
+    }
+
+    this.i++;
+
+    this.currentStep = new Step(this.steps[this.i], this).on();
+
+    $('.tour-container, .tour-arrow').addClass('tour-display-on');
+    setTimeout(function () {
+        $('.tour-overlay').removeClass('tour-transition');
+    }, 250);
+};
+
 Tour.prototype.showNext = function (show) {
     show ? this.nextButton.show() : this.nextButton.hide();
 };
@@ -95,23 +117,6 @@ Tour.prototype.createOverlay = function () {
     return this;
 };
 
-Tour.prototype.next = function () {
-    $('.tour-container, .tour-arrow').removeClass('tour-display-on');
-
-    if (this.currentStep) {
-        this.currentStep.off();
-        $('.tour-overlay').addClass('tour-transition');
-    }
-
-    this.i++;
-
-    this.currentStep = new Step(this.steps[this.i], this).on();
-
-    $('.tour-container, .tour-arrow').addClass('tour-display-on');
-    setTimeout(function () {
-        $('.tour-overlay').removeClass('tour-transition');
-    }, 250);
-};
 
 
 function Step(data, tour) {
@@ -286,36 +291,41 @@ Step.prototype.initScrollTo = function () {
 }
 
 Step.prototype.on = function () {
-    this.tour.$document.trigger('tour.step.start', ['step.start', this.tour, this]);
-    this.setTarget()
-        .setView()
-        .setPosition()
-        .positionOverlay()
-        .setContent()
-        .positionContent()
-        .positionArrow();
-
     var self = this;
-    this.tour.$window.on('resize', function () {
-        self.setView()
+
+    this.tour.$document.arrive(this.selector || 'body', {
+        existing: true,
+        onceOnly: true
+    }, function () {
+        self.tour.$document.trigger('tour.step.start', ['step.start', self.tour, self]);
+        self.setTarget()
+            .setView()
             .setPosition()
             .positionOverlay()
+            .setContent()
             .positionContent()
             .positionArrow();
-    }).on('scroll', function () {
-        self.setView()
-            .setPosition()
-            .positionOverlay()
-            .positionContent()
-            .positionArrow();
+        self.initScrollTo();
     });
 
-    this.eventListener = function (event) {
-        self.tour.next();
-    };
+    if (this.selector) {
+        this.scrollListener = function () {
+            self.setView()
+                .setPosition()
+                .positionOverlay()
+                .positionContent()
+                .positionArrow();
+        };
+        this.tour.$window.on('resize', self.scrollListener).on('scroll', self.scrollListener);
+    }
 
-    this.tour.$document.on(this.event, this.selector, this.eventListener);
-    self.initScrollTo();
+    if (event !== 'next') {
+        this.eventListener = function (event) {
+            self.tour.next();
+        };
+
+        this.tour.$document.on(this.event, this.selector, this.eventListener);
+    }
 
     // show/hide next button
     this.tour.showNext(this.showNext || this.event.toLowerCase() === 'next')
@@ -325,7 +335,10 @@ Step.prototype.on = function () {
 
 Step.prototype.off = function () {
     this.tour.$document.trigger('tour.step.next', ['step.next', this.tour, this]);
-    this.tour.$document.off(this.event, this.selector, this.eventListener);
+
+    if (this.eventListener) this.tour.$document.off(this.event, this.selector, this.eventListener);
+    if (this.scrollListener) this.tour.$window.off('resize', this.scrollListener).off('scroll', this.scrollListener);
+
     if (this.element) {
         this.element.removeClass('tour-target');
     }

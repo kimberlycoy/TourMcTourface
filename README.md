@@ -1,7 +1,21 @@
 # TourMcTourface
 A guided tour library.
 
-# Step options
+## Install
+```bash
+$ bower install git@github.com:kimberlycoy/TourMcTourface.git
+```
+
+Add the following to your html.
+```html
+<link rel="stylesheet" type="text/css" href="[bower]/TourMcTourface/tour.css">
+<script src="[bower]/jquery/dist/jquery.min.js"></script>
+<script src="[bower]/jquery.scrollTo/jquery.scrollTo.min.js"></script>
+<script src="[bower]/arrive/minified/arrive.min.js"></script>
+<script src="[bower]/TourMcTourface/tour.js"></script>
+```
+
+## Step options
 - event: next | click | [etc]
 - showNext: Show the next button, default:false. The next button is also show if event is set to 'next'.
 - custom events:
