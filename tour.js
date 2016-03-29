@@ -1,7 +1,6 @@
-//var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
-
 function Tour(options) {
     this.options = {
+        margin: 5,
         scrollTo: {
             duration: 800,
             offset: { top: -10 },
@@ -112,33 +111,36 @@ Step.prototype.positionOverlay = function () {
         height: $(window).height(),
         width: $(document).outerWidth()
     };
+    var margin = $.isNumeric(this.margin) ? this.margin : this.tour.options.margin;
+
+    console.log('positionOverlay, margin:', margin);
 
     this.overlay.bottom.css({
-        top: this.position.bottom,
-        left: this.position.left,
+        top: this.position.bottom + margin,
+        left: this.position.left - margin,
         height: max.height,
-        width: this.position.width
+        width: this.position.width + (margin * 2)
     });
 
     this.overlay.top.css({
         top: 0,
         left: 0,
-        height: this.position.top,
+        height: this.position.top - margin,
         width: "100%"
     });
 
     this.overlay.right.css({
-        top: this.position.top,
-        left: this.position.right,
+        top: this.position.top - margin,
+        left: this.position.right + margin,
         height: max.height,
         width: max.width
     });
 
     this.overlay.left.css({
-        top: this.position.top,
+        top: this.position.top - margin,
         left: 0,
         height: $(window).height(),
-        width: this.position.left
+        width: this.position.left - margin
     });
 
     return this;

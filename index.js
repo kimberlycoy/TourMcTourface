@@ -19,7 +19,8 @@ $(function () {
     }, {
         event: 'dragstart',
         selector: '.one-drag',
-        content: "Drag me"
+        content: "Drag me",
+        margin: 0
     }, {
         event: 'drop',
         selector: '.one-drop',

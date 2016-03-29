@@ -14,3 +14,4 @@ A guided tour library.
     $(document).trigger('custom.event');
 ```
 - scrollTo: False or a settings object for https://github.com/flesler/jquery.scrollTo plus a delay property that is the timeout before scrollTo() is applied. 
+- margin: The margin around the selector element, default 5.
