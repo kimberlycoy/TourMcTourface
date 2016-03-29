@@ -275,7 +275,7 @@ Step.prototype.setPosition = function () {
 };
 
 Step.prototype.initScrollTo = function () {
-    if (this.scrollTo === false) return this;
+    if (!this.element || this.scrollTo === false) return this;
 
     var self = this;
     var scrollTo = this.tour.options.scrollTo;
@@ -311,16 +311,12 @@ Step.prototype.on = function () {
             .positionArrow();
     });
 
-    if (this.element) {
-        this.tour.$document.on(this.event, this.selector, function (event) {
-            self.tour.next();
-        });
-        self.initScrollTo();
-    } else {
-        this.tour.$document.on(this.event, function (event) {
-            self.tour.next();
-        });
-    }
+    this.eventListener = function (event) {
+        self.tour.next();
+    };
+
+    this.tour.$document.on(this.event, this.selector, this.eventListener);
+    self.initScrollTo();
 
     // show/hide next button
     this.tour.showNext(this.showNext || this.event.toLowerCase() === 'next')
@@ -330,6 +326,9 @@ Step.prototype.on = function () {
 
 Step.prototype.off = function () {
     this.tour.$document.trigger('tour.step.next', ['step.next', this.tour, this]);
-    if (!this.element) return this;
-    this.element.removeClass('tour-target');
+    this.tour.$document.off(this.event, this.selector, this.eventListener);
+    if (this.element) {
+        this.element.removeClass('tour-target');
+    }
+    return this;
 }
