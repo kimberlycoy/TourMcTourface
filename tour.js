@@ -111,9 +111,8 @@ Step.prototype.positionOverlay = function () {
         height: $(window).height(),
         width: $(document).outerWidth()
     };
-    var margin = $.isNumeric(this.margin) ? this.margin : this.tour.options.margin;
-
-    console.log('positionOverlay, margin:', margin);
+    var margin = 0;
+    if (this.element) margin = $.isNumeric(this.margin) ? this.margin : this.tour.options.margin;
 
     this.overlay.bottom.css({
         top: this.position.bottom + margin,
