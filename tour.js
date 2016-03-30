@@ -371,20 +371,6 @@ Step.prototype.init = function () {
     return this;
 };
 
-Step.prototype.transitionDuration = function () {
-    if (!this._transitionDuration) {
-        this._transitionDuration = 250;
-        var duration = $('.tour-overlay').css('transition-duration');
-        var bits = duration.split('s');
-        if (bits.length > 1) {
-            this._transitionDuration = parseFloat(bits[0]) * 1000;
-        } else if (bits.length > 0) {
-            this._transitionDuration = parseInt(duration);
-        }
-    }
-    return this._transitionDuration;
-};
-
 Step.prototype.on = function () {
     var self = this;
 
