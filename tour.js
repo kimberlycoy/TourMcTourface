@@ -339,7 +339,7 @@ Step.prototype.initEvent = function () {
 
         this.tour.$document.on(
             this.event,
-            this.event_type === 'custom' ? undefined : this.selector,
+            this.event_type === 'custom' ? undefined : (this.event_selector || this.selector),
             this.eventListener);
     }
 

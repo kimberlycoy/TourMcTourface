@@ -40,13 +40,14 @@ $(function () {
         selector: '.four',
         content: "Four"
     }, {
-        event: 'next',
+        event: 'click',
         selector: '.five',
         position: 'left',
         content: 'position:left'
     }, {
-        event: 'next',
-        selector: '.six',
+        event: 'click',
+        event_selector: '.six',
+        selector: '.six-container',
         position: 'right',
         content: 'position:right'
     }];
