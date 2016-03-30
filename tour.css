@@ -37,7 +37,7 @@
 }
 
 .tour-overlay-center.tour-display-on {
-    transition: background 1.2s ease, z-index 0s linear 1.2s;
+    transition: background 1.2s ease, z-index 0s linear 1.1s;
     background: rgba(0, 0, 0, 0);
     z-index: -100;
 }
