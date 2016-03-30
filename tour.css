@@ -73,8 +73,3 @@
 .tour-buttons button:focus{
     outline:none;
 }
-
-
-.tour-on .coi-modal{
-overflow:hidden;
-}
