@@ -1,22 +1,27 @@
-.tour-on {}
+.tour-on{
+    overflow:hidden;
+}
 
 .tour-overlay {
     z-index: 200;
     position: fixed;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(4, 22, 40,0.75);
     will-change: left, top, width, height;
 }
 
 .tour-container {
     z-index: 201;
     position: fixed;
-    color: white;
-    font-weight: bold;
-    font-size: larger;
+    color: rgba(255,255,255,0.8);
+    font-size: large;
     padding: 20px;
     text-align: center;
     max-width: 500px;
     opacity: 0;
+}
+
+.tour-container br{
+    line-height:30px;
 }
 
 .tour-arrow {
@@ -51,5 +56,20 @@
     text-align: left;
 }
 
-.tour-target {
+.tour-buttons button{
+    padding:10px 40px;
+    font-size:20px;
+    color:#fff;
+    border-radius:9999px;
+    background:rgba(0,0,0,0.2);
+    border:2px solid #fff;
+    margin-top:20px;
+}
+
+.tour-buttons button:hover{
+    background-color:rgba(0,0,0,0.4);
+}
+
+.tour-buttons button:focus{
+    outline:none;
 }
