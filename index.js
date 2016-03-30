@@ -39,6 +39,16 @@ $(function () {
         event: 'next',
         selector: '.four',
         content: "Four"
+    }, {
+        event: 'next',
+        selector: '.five',
+        position: 'left',
+        content: 'position:left'
+    }, {
+        event: 'next',
+        selector: '.six',
+        position: 'right',
+        content: 'position:right'
     }];
 
     var tour = new Tour({

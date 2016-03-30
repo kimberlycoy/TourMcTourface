@@ -146,40 +146,40 @@ Step.prototype.positionOverlay = function () {
         width: this.tour.$document.outerWidth()
     };
     var margin = this.getMargin();
-    var height = this.position.height + margin * 2;
-    var width = this.position.width + margin * 2;
+    var height = this._position.height + margin * 2;
+    var width = this._position.width + margin * 2;
 
     this.overlay.top.css({
         top: 0,
         left: 0,
-        height: this.position.top - margin,
+        height: this._position.top - margin,
         width: '100vw'
     });
 
     this.overlay.bottom.css({
-        top: this.position.bottom + margin,
-        left: 0, 
+        top: this._position.bottom + margin,
+        left: 0,
         height: max.height,
         width: '100vw'
     });
 
     this.overlay.left.css({
-        top: this.position.top - margin,
+        top: this._position.top - margin,
         left: 0,
-        height: height, 
-        width: this.position.left - margin * 2
+        height: height,
+        width: this._position.left - margin * 2
     });
 
     this.overlay.right.css({
-        top: this.position.top - margin,
-        left: this.position.right + margin,
+        top: this._position.top - margin,
+        left: this._position.right + margin,
         height: height,
         width: max.width
     });
 
     this.overlay.center.css({
-        top: this.position.top - margin,
-        left: this.position.left - margin,
+        top: this._position.top - margin,
+        left: this._position.left - margin,
         height: height,
         width: width,
     });
@@ -195,28 +195,33 @@ Step.prototype.setView = function () {
     return this;
 };
 
+Step.prototype.getPositionDescription = function () {
+    if ($.type(this.position) === 'string') return this.position.toLowerCase();
+    if ($.isPlainObject(this.position)) return "custom";
+    if (this._position.right <= this.view.widthHalf) return 'right';
+    if (this._position.left >= this.view.widthHalf) return 'left';
+    return 'bottom';
+};
+
 Step.prototype.positionContent = function () {
     if (this.selector) {
 
         var position = {
-            top: this.position.bottom + 75 + this.getMargin(),
+            top: this._position.bottom + 75 + this.getMargin(),
             left: 'auto',
             right: 'auto',
             transform: ''
         };
-        var description = 'bottom';
+        var description = this.getPositionDescription(); 
 
-        if (this.position.right <= this.view.widthHalf) {
-            // right of element
-            position.left = this.position.left + 120;
-            description = 'right';
-        } else if (this.position.left >= this.view.widthHalf) {
-            // left of element
-            position.right = this.position.center.right + 120;
-            description = 'left';
+        if (description === 'right') {
+            position.left = this._position.left + 120;
+        } else if (description === 'left') {
+            position.right = this._position.center.right + 120;
+        } else if (description === 'custom') {
+            $(position, this._position);
         } else {
-            // below element
-            position.left = this.position.center.left;
+            position.left = this._position.center.left;
             position.transform = 'translateX(-50%)';
         }
 
@@ -249,14 +254,15 @@ Step.prototype.positionArrow = function () {
     if (this.selector) {
         var containerPosition = {};
         $.extend(containerPosition, this.tour.$container[0].getBoundingClientRect());
-        containerPosition.right = this.position.left + this.position.width;
-        containerPosition.bottom = this.position.top + this.position.height;
+        containerPosition.right = this._position.left + this._position.width;
+        containerPosition.bottom = this._position.top + this._position.height;
         containerPosition.description = this.tour.$container.data('position');
 
         var css = {
-            top: this.position.bottom + this.getMargin(),
-            left: this.position.center.left - this.tour.markerWidth,
-            right: 'auto'
+            top: this._position.bottom + this.getMargin(),
+            left: this._position.center.left - this.tour.markerWidth,
+            right: 'auto',
+            height: 'auto'
         };
         var path = 'M5,2 C20,100 30,110 100,108';
 
@@ -279,17 +285,17 @@ Step.prototype.positionArrow = function () {
 
 Step.prototype.setPosition = function () {
     if (this.element) {
-        this.position = {};
-        this.position = $.extend(this.position, this.element[0].getBoundingClientRect());
-        this.position.right = this.position.left + this.position.width;
-        this.position.bottom = this.position.top + this.position.height;
-        this.position.widthHalf = this.position.width / 2.0;
-        this.position.center = {
-            right: this.view.width - this.position.right + this.position.widthHalf,
-            left: this.position.left + this.position.widthHalf
+        this._position = {};
+        this._position = $.extend(this._position, this.element[0].getBoundingClientRect());
+        this._position.right = this._position.left + this._position.width;
+        this._position.bottom = this._position.top + this._position.height;
+        this._position.widthHalf = this._position.width / 2.0;
+        this._position.center = {
+            right: this.view.width - this._position.right + this._position.widthHalf,
+            left: this._position.left + this._position.widthHalf
         }
     } else {
-        this.position = { top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0 };
+        this._position = { top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0 };
     }
     return this;
 };
