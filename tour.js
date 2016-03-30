@@ -167,7 +167,7 @@ Step.prototype.positionOverlay = function () {
         top: this._position.top - margin,
         left: 0,
         height: height,
-        width: this._position.left - margin * 2
+        width: this._position.left - margin
     });
 
     this.overlay.right.css({

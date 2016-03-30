@@ -29,6 +29,7 @@ Add the following to your html.
 ```
 - scrollTo: False or a settings object for https://github.com/flesler/jquery.scrollTo plus a delay property that is the timeout before scrollTo() is applied. 
 - margin: The margin around the selector element, default 5.
+- position: (optional) left | right | bottom or css object.
 
 # Events
 * `start` - fires on the first step.
@@ -41,7 +42,7 @@ Add the following to your html.
   @param: {Tour} instance.
   @param: {Step} instance. 
 **/ 
-enjoyhint_instance.on('step.start', function (event, tour, data) {
+tour.on('step.start', function (event, tour, data) {
     // do something
 });
 ```
