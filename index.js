@@ -4,19 +4,23 @@ $(function () {
     $('.one-drop').droppable();
 
     var steps = [{
-        event: 'custom.event',
-        // Both "description" and "content" work.
-        description: `
-            <h1>I'm a custom event</h1> <i>(w/html)!</i>
-            <div style="margin-top: 20px; font-size: small;">
-                Trigger me with <br>
-                <code>$(document).trigger('custom.event');</code>
-            </div>
-            `
-    }, {
-        event: 'next',
-        content: 'Welcome, click next',
-        timeout: 1000
+    //     event: 'custom.event',
+    //     // Both "description" and "content" work.
+    //     description: `
+    //         <h1>I'm a custom event</h1> <i>(w/html)!</i>
+    //         <div style="margin-top: 20px; font-size: small;">
+    //             Trigger me with <br>
+    //             <code>$(document).trigger('custom.event');</code>
+    //         </div>
+    //         `
+    // }, {
+    //     event: 'next',
+    //     content: 'Welcome, click next',
+        // timeout: 1000
+        event: 'input',
+        selector: 'input',
+        content: 'Enter "go".',
+        require: 'go' 
     }, {
         event: 'dragstart',
         selector: '.one-drag',

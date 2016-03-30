@@ -334,7 +334,14 @@ Step.prototype.initEvent = function () {
 
     if (event !== 'next') {
         this.eventListener = function (event) {
-            self.tour.next();
+            var ok = true; 
+
+            console.log('require:', self.require);
+            if ($.type(self.require) === 'string' && self.element.val().toLowerCase() !== self.require) {
+                ok = false; 
+            }
+
+            if (ok) self.tour.next();
         };
 
         this.tour.$document.on(
