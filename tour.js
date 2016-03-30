@@ -246,6 +246,7 @@ Step.prototype.setTarget = function () {
 
     this.element = $(this.selector);
     this.element.addClass('tour-target');
+    if (this.focus !== false) this.element.focus();
 
     return this;
 };
@@ -336,7 +337,7 @@ Step.prototype.initEvent = function () {
         this.eventListener = function (event) {
             var ok = true; 
 
-            console.log('require:', self.require);
+            console.log('require:', self.require, self.element.val());
             if ($.type(self.require) === 'string' && self.element.val().toLowerCase() !== self.require) {
                 ok = false; 
             }
@@ -344,9 +345,10 @@ Step.prototype.initEvent = function () {
             if (ok) self.tour.next();
         };
 
+        var selector = this.eventSelector || this.event_selector || this.selector;
         this.tour.$document.on(
             this.event,
-            this.event_type === 'custom' ? undefined : (this.event_selector || this.selector),
+            (this.eventType || this.event_type) === 'custom' ? undefined : selector,
             this.eventListener);
     }
 

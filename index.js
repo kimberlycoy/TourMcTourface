@@ -17,8 +17,13 @@ $(function () {
     //     event: 'next',
     //     content: 'Welcome, click next',
         // timeout: 1000
+        event: 'change',
+        selector: 'input[type="checkbox"]',
+        content: 'Check me',
+        require: 'on' 
+    }, {
         event: 'input',
-        selector: 'input',
+        selector: 'input[placeholder="go"]',
         content: 'Enter "go".',
         require: 'go' 
     }, {

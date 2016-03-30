@@ -16,20 +16,26 @@ Add the following to your html.
 ```
 
 ## Step options
-- event: next | click | [etc]
-- showNext: Show the next button, default:false. The next button is also show if event is set to 'next'.
-- custom events:
-```javascript
-    {
-        event: 'custom.event',
-        description: "I'm a custom event." 
-    }
+- event: next | click | [any HTML or custom event]
+- selector: CSS selector for element to highlite. If no selector is give, then the content is displayed w/o an arrow. (optional) 
+- eventSelector: Listen for the event on this element (CSS selector). (optional)
+- showNext: Show the next button, default:false. The next button is also show if event is set to 'next'. (optional)
+- scrollTo: False or a settings object for https://github.com/flesler/jquery.scrollTo plus a delay property that is the timeout before scrollTo() is applied. (optional)
+- margin: The margin around the selector element, default 0. (optional)
+- position: left | right | bottom or css object. (optional)
+- focus: Set the focus on the selector element, default:true. (optional)
+- require:
 
-    $(document).trigger('custom.event');
+##### Custom Events
+```javascript
+{
+    event: 'custom.event',
+    eventType: 'custom',
+    description: "I'm a custom event." 
+}
+
+tour.trigger('custom.event'); or $(document).trigger('custom.event');
 ```
-- scrollTo: False or a settings object for https://github.com/flesler/jquery.scrollTo plus a delay property that is the timeout before scrollTo() is applied. 
-- margin: The margin around the selector element, default 5.
-- position: (optional) left | right | bottom or css object.
 
 # Events
 * `start` - fires on the first step.
