@@ -98,6 +98,7 @@ Tour.prototype.stop = function () {
         self.$container.remove();
         self.$arrow.remove();
         $('.tour-overlay').remove();
+        this.$body.removeClass('tour-on');
     }, 2000);
 };
 
