@@ -4,19 +4,34 @@ $(function () {
     $('.one-drop').droppable();
 
     var steps = [{
-    //     event: 'custom.event',
-    //     // Both "description" and "content" work.
-    //     description: `
-    //         <h1>I'm a custom event</h1> <i>(w/html)!</i>
-    //         <div style="margin-top: 20px; font-size: small;">
-    //             Trigger me with <br>
-    //             <code>$(document).trigger('custom.event');</code>
-    //         </div>
-    //         `
-    // }, {
-    //     event: 'next',
-    //     content: 'Welcome, click next',
-        // timeout: 1000
+        event: 'custom.event',
+        // Both "description" and "content" work.
+        description: `
+            <h1>I'm a custom event</h1> <i>(w/html)!</i>
+            <div style="margin-top: 20px; font-size: small;">
+                Trigger me with <br>
+                <code>$(document).trigger('custom.event');</code>
+            </div>
+            `
+    }, {
+        event: 'next',
+        content: 'Welcome, click next',
+        timeout: 1000
+    }, {
+        event: 'click',
+        selector: '.dropdown',
+        eventSelector: '.dropdown button',
+        margin: 5,
+        content: 'Open the dropdown'
+    }, {
+        event: 'click',
+        selector: '.dropdown-menu li:nth-child(2) a',
+        content: 'Select "Another Action"',
+        prevent: {
+            event: 'click',
+            selector: '.dropdown'
+        } 
+    }, {
         event: 'change',
         selector: 'input[type="checkbox"]',
         content: 'Check me',

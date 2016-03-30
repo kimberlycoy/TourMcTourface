@@ -98,7 +98,7 @@ Tour.prototype.stop = function () {
         self.$container.remove();
         self.$arrow.remove();
         $('.tour-overlay').remove();
-        this.$body.removeClass('tour-on');
+        self.$body.removeClass('tour-on');
     }, 2000);
 };
 
@@ -121,6 +121,11 @@ Tour.prototype.createOverlay = function () {
     this.$body.append(this.overlay.right);
     this.$body.append(this.overlay.bottom);
     this.$body.append(this.overlay.center);
+
+    // turn off click events on the overlay
+    $('.tour-overlay').on('click', function (e) {
+        e.stopPropagation();
+    });
 
     return this;
 };
@@ -246,7 +251,7 @@ Step.prototype.setTarget = function () {
 
     this.element = $(this.selector);
     this.element.addClass('tour-target');
-    if (this.focus !== false) this.element.focus();
+    this._focus();
 
     return this;
 };
@@ -330,26 +335,43 @@ Step.prototype.initScroll = function () {
     return this;
 };
 
+Step.prototype._focus = function () {
+    if (this.focus !== false) this.element.focus();
+}
+
 Step.prototype.initEvent = function () {
     var self = this;
 
     if (event !== 'next') {
+        var triggered = false;
+        var selector = this.eventSelector || this.event_selector || this.selector;
+
         this.eventListener = function (event) {
-            var ok = true; 
-
-            console.log('require:', self.require, self.element.val());
+            var ok = true;
             if ($.type(self.require) === 'string' && self.element.val().toLowerCase() !== self.require) {
-                ok = false; 
+                ok = false;
             }
+            if (ok) {
+                triggered = true;
+                if (this.prevent) this.tour.$document.off(this.prevent.event, this.prevent.selector);
 
-            if (ok) self.tour.next();
+                self.tour.next();
+            }
         };
 
-        var selector = this.eventSelector || this.event_selector || this.selector;
         this.tour.$document.on(
             this.event,
             (this.eventType || this.event_type) === 'custom' ? undefined : selector,
             this.eventListener);
+
+        if (this.prevent) {
+            this.tour.$document.on(this.prevent.event, this.prevent.selector, function (e) {
+                if (triggered) return;
+                e.stopPropagation();
+                e.preventDefault();
+                self._focus();
+            });
+        }
     }
 
     return this;
