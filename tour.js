@@ -212,12 +212,12 @@ Step.prototype.positionContent = function () {
             right: 'auto',
             transform: ''
         };
-        var description = this.getPositionDescription(); 
+        var description = this.getPositionDescription();
 
         if (description === 'right') {
-            position.left = this._position.left + 120;
+            position.left = this._position.center.left + 110;
         } else if (description === 'left') {
-            position.right = this._position.center.right + 120;
+            position.right = this._position.center.right + 110;
         } else if (description === 'custom') {
             $(position, this._position);
         } else {
