@@ -111,13 +111,15 @@ Tour.prototype.createOverlay = function () {
         top: $(div),
         left: $(div),
         right: $(div),
-        bottom: $(div)
+        bottom: $(div),
+        center: $(div).addClass('tour-overlay-center')
     };
 
     this.$body.append(this.overlay.top);
     this.$body.append(this.overlay.left);
     this.$body.append(this.overlay.right);
     this.$body.append(this.overlay.bottom);
+    this.$body.append(this.overlay.center);
 
     return this;
 };
@@ -143,33 +145,42 @@ Step.prototype.positionOverlay = function () {
         width: this.tour.$document.outerWidth()
     };
     var margin = this.getMargin();
-
-    this.overlay.bottom.css({
-        top: this.position.bottom + margin,
-        left: this.position.left - margin,
-        height: max.height,
-        width: this.position.width + (margin * 2)
-    });
+    var height = this.position.height + margin * 2;
+    var width = this.position.width + margin * 2;
 
     this.overlay.top.css({
         top: 0,
         left: 0,
         height: this.position.top - margin,
-        width: "100%"
+        width: '100vw'
     });
 
-    this.overlay.right.css({
-        top: this.position.top - margin,
-        left: this.position.right + margin,
+    this.overlay.bottom.css({
+        top: this.position.bottom + margin,
+        left: 0, 
         height: max.height,
-        width: max.width
+        width: '100vw'
     });
 
     this.overlay.left.css({
         top: this.position.top - margin,
         left: 0,
-        height: $(window).height(),
-        width: this.position.left - margin
+        height: height, 
+        width: this.position.left - margin * 2
+    });
+
+    this.overlay.right.css({
+        top: this.position.top - margin,
+        left: this.position.right + margin,
+        height: height,
+        width: max.width
+    });
+
+    this.overlay.center.css({
+        top: this.position.top - margin,
+        left: this.position.left - margin,
+        height: height,
+        width: width,
     });
 
     return this;
@@ -377,11 +388,7 @@ Step.prototype.on = function () {
     var self = this;
 
     setTimeout(function () {
-        $('.tour-overlay').removeClass('tour-transition');
-    }, this.timeout || this.transitionDuration());
-
-    setTimeout(function () {
-        self.tour.$container.addClass('tour-display-on');
+        $('.tour-container, .tour-overlay-center').addClass('tour-display-on');
         if (self.selector) self.tour.$arrow.addClass('tour-display-on');
         self.init();
     }, self.timeout || 0);
@@ -392,8 +399,7 @@ Step.prototype.on = function () {
 Step.prototype.off = function () {
     this.tour.$document.trigger('tour.step.next', ['step.next', this.tour, this]);
 
-    $('.tour-container, .tour-arrow').removeClass('tour-display-on');
-    $('.tour-overlay').addClass('tour-transition');
+    $('.tour-container, .tour-arrow, .tour-overlay-center').removeClass('tour-display-on');
 
     if (this.eventListener) this.tour.$document.off(this.event, this.selector, this.eventListener);
     if (this.scrollListener) this.tour.$window.off('resize', this.scrollListener).off('scroll', this.scrollListener);
