@@ -349,10 +349,11 @@ Step.prototype.initEvent = function () {
     if (event !== 'next') {
         var triggered = false;
         var selector = this.eventSelector || this.event_selector || this.selector;
+        var element = $(selector);
 
         this.eventListener = function (event) {
             var ok = true;
-            if ($.type(self.require) === 'string' && self.element.val() !== self.require) {
+            if ($.type(self.require) === 'string' && element.val() !== self.require) {
                 ok = false;
             }
             if (ok) {
