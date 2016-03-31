@@ -124,7 +124,11 @@ Tour.prototype.createOverlay = function () {
 
     // turn off click events on the overlay
     $('.tour-overlay').on('click', function (e) {
+        e.preventDefault();
         e.stopPropagation();
+        if (self.currentStep) {
+            self.currentStep._focus();
+        }
     });
 
     return this;
@@ -336,7 +340,7 @@ Step.prototype.initScroll = function () {
 };
 
 Step.prototype._focus = function () {
-    if (this.focus !== false) this.element.focus();
+    if (this.focus !== false && this.element) this.element.focus();
 }
 
 Step.prototype.initEvent = function () {
@@ -348,7 +352,7 @@ Step.prototype.initEvent = function () {
 
         this.eventListener = function (event) {
             var ok = true;
-            if ($.type(self.require) === 'string' && self.element.val().toLowerCase() !== self.require) {
+            if ($.type(self.require) === 'string' && self.element.val() !== self.require) {
                 ok = false;
             }
             if (ok) {
