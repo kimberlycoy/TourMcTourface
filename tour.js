@@ -425,7 +425,7 @@ Step.prototype.initEvent = function () {
 
 Step.prototype.initNext = function () {
     // show/hide next button
-    this.tour.showNext(this.showNext || this.event.toLowerCase() === 'next')
+    this.tour.showNext(this.showNext || (this.event || 'next').toLowerCase() === 'next');
     return this;
 };
 
