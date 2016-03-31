@@ -144,7 +144,7 @@ function Step(data, tour) {
 
 Step.prototype.getMargin = function () {
     var margin = 0;
-    if (this.element) margin = $.isNumeric(this.margin) ? this.margin : this.tour.options.margin;
+    if (this._element) margin = $.isNumeric(this.margin) ? this.margin : this.tour.options.margin;
     return margin;
 };
 
@@ -251,11 +251,16 @@ Step.prototype.setContent = function () {
 };
 
 Step.prototype.setTarget = function () {
-    if (!this.selector) return this;
+    if (this.selector) {
+        this._element = $(this.selector);
+        this._element.addClass('tour-target');
+    }
 
-    this.element = $(this.selector);
-    this.element.addClass('tour-target');
-    this._focus();
+    this._eventSelector = this.eventSelector || this.event_selector || this.selector;
+    if (this._eventSelector) {
+        this._eventElement = $(this._eventSelector);
+        this._focus();
+    }
 
     return this;
 };
@@ -294,9 +299,9 @@ Step.prototype.positionArrow = function () {
 };
 
 Step.prototype.setPosition = function () {
-    if (this.element) {
+    if (this._element) {
         this._position = {};
-        this._position = $.extend(this._position, this.element[0].getBoundingClientRect());
+        this._position = $.extend(this._position, this._element[0].getBoundingClientRect());
         this._position.right = this._position.left + this._position.width;
         this._position.bottom = this._position.top + this._position.height;
         this._position.widthHalf = this._position.width / 2.0;
@@ -311,14 +316,14 @@ Step.prototype.setPosition = function () {
 };
 
 Step.prototype.initScrollTo = function () {
-    if (!this.element || this.scrollTo === false) return this;
+    if (!this._element || this.scrollTo === false) return this;
 
     var self = this;
     var scrollTo = this.tour.options.scrollTo;
     $.extend(scrollTo, $.isPlainObject(self.scrollTo) ? self.scrollTo : {});
 
     setTimeout(function () {
-        self.tour.$document.scrollTo(self.element, scrollTo);
+        self.tour.$document.scrollTo(self._element, scrollTo);
     }, scrollTo.delay);
 }
 
@@ -340,7 +345,7 @@ Step.prototype.initScroll = function () {
 };
 
 Step.prototype._focus = function () {
-    if (this.focus !== false && this.element) this.element.focus();
+    if (this.focus !== false && this._eventElement) this._eventElement.focus();
 }
 
 Step.prototype.initEvent = function () {
@@ -348,12 +353,10 @@ Step.prototype.initEvent = function () {
 
     if (event !== 'next') {
         var triggered = false;
-        var selector = this.eventSelector || this.event_selector || this.selector;
-        var element = $(selector);
 
         this.eventListener = function (event) {
             var ok = true;
-            if ($.type(self.require) === 'string' && element.val() !== self.require) {
+            if ($.type(self.require) === 'string' && self._eventElement.val() !== self.require) {
                 ok = false;
             }
             if (ok) {
@@ -366,7 +369,7 @@ Step.prototype.initEvent = function () {
 
         this.tour.$document.on(
             this.event,
-            (this.eventType || this.event_type) === 'custom' ? undefined : selector,
+            (this.eventType || this.event_type) === 'custom' ? undefined : self._eventSelector,
             this.eventListener);
 
         if (this.prevent) {
@@ -430,11 +433,11 @@ Step.prototype.off = function () {
 
     $('.tour-container, .tour-arrow, .tour-overlay-center').removeClass('tour-display-on');
 
-    if (this.eventListener) this.tour.$document.off(this.event, this.selector, this.eventListener);
+    if (this.eventListener) this.tour.$document.off(this.event, this._eventSelector, this.eventListener);
     if (this.scrollListener) this.tour.$window.off('resize', this.scrollListener).off('scroll', this.scrollListener);
 
-    if (this.element) {
-        this.element.removeClass('tour-target');
+    if (this._element) {
+        this._element.removeClass('tour-target');
     }
     return this;
 };
