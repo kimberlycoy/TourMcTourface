@@ -352,7 +352,6 @@ Step.prototype.initEvent = function () {
     var self = this;
 
     if (event !== 'next') {
-        var triggered = false;
 
         this.eventListener = function (event) {
             var ok = true;
@@ -372,23 +371,15 @@ Step.prototype.initEvent = function () {
 
         if (this.prevent) {
             this.tour.$document.on(this.prevent.event, this.prevent.selector, function (e) {
-                if (triggered) {
-                    self.tour.$document.off(self.prevent.event, self.prevent.selector);
-                } else {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    self._focus();
-                }
+                e.stopPropagation();
+                e.preventDefault();
+                self._focus();
             });
         }
 
         if (this._eventElement && this._eventElement.is(':input')) {
             this._eventElement.on('blur', function (e) {
-                if (triggered) {
-                    self._eventElement.off('blur');
-                } else {
-                    self._focus();
-                }
+                self._focus();
             });
         }
     }
@@ -446,6 +437,9 @@ Step.prototype.off = function () {
 
     if (this.eventListener) this.tour.$document.off(this.event, this._eventSelector, this.eventListener);
     if (this.scrollListener) this.tour.$window.off('resize', this.scrollListener).off('scroll', this.scrollListener);
+
+    if (this._eventElement) this._eventElement.off('blur');
+    if (this.prevent) this.tour.$document.off(this.prevent.event, this.prevent.selector);
 
     if (this._element) {
         this._element.removeClass('tour-target');
