@@ -35,7 +35,7 @@ Tour.prototype.setSteps = function (steps) {
 Tour.prototype.addSteps = function (steps) {
     this.steps = this.steps.concat(steps);
     if (this.options.reload && this.currentStep) {
-        this.resetCurrentStep(); 
+        this.resetCurrentStep();
     }
 };
 
@@ -293,6 +293,8 @@ Step.prototype.setTarget = function () {
         this._focus();
     }
 
+    this._eventType = this.eventType || this.event_type
+
     return this;
 };
 
@@ -398,7 +400,7 @@ Step.prototype.initEvent = function () {
 
         this.tour.$document.on(
             this.event,
-            (this.eventType || this.event_type) === 'custom' ? undefined : self._eventSelector,
+            this._eventType === 'custom' ? undefined : this._eventSelector,
             this.eventListener);
 
         if (this.prevent) {
