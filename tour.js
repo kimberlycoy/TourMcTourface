@@ -361,8 +361,6 @@ Step.prototype.initEvent = function () {
             }
             if (ok) {
                 triggered = true;
-                if (this.prevent) this.tour.$document.off(this.prevent.event, this.prevent.selector);
-
                 self.tour.next();
             }
         };
@@ -374,10 +372,23 @@ Step.prototype.initEvent = function () {
 
         if (this.prevent) {
             this.tour.$document.on(this.prevent.event, this.prevent.selector, function (e) {
-                if (triggered) return;
-                e.stopPropagation();
-                e.preventDefault();
-                self._focus();
+                if (triggered) {
+                    self.tour.$document.off(self.prevent.event, self.prevent.selector);
+                } else {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    self._focus();
+                }
+            });
+        }
+
+        if (this._eventElement && this._eventElement.is(':input')) {
+            this._eventElement.on('blur', function (e) {
+                if (triggered) {
+                    self._eventElement.off('blur');
+                } else {
+                    self._focus();
+                }
             });
         }
     }
