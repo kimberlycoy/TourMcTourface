@@ -15,6 +15,10 @@ Add the following to your html.
 <script src="[bower]/TourMcTourface/tour.js"></script>
 ```
 
+## Tour options
+- reload: Reloads the current step if new steps are added, default:false.
+- steps: An array of step options.
+
 ## Step options
 - event: next | click | [any HTML or custom event]
 - selector: CSS selector for element to highlite. If no selector is give, then the content is displayed w/o an arrow. (optional) 

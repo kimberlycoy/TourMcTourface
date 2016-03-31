@@ -5,7 +5,8 @@ function Tour(options) {
             duration: 800,
             offset: { top: -10 },
             display: 500
-        }
+        },
+        reload: false
     };
 
     this.$document = $(document);
@@ -32,7 +33,16 @@ Tour.prototype.setSteps = function (steps) {
 };
 
 Tour.prototype.addSteps = function (steps) {
-    this.steps.concat(steps);
+    this.steps = this.steps.concat(steps);
+    if (this.options.reload && this.currentStep) {
+        this.resetCurrentStep(); 
+    }
+};
+
+Tour.prototype.resetCurrentStep = function () {
+    if (!this.currentStep) return;
+    this.currentStep.off();
+    this.currentStep = new Step(this.steps[this.i], this).on();
 };
 
 Tour.prototype.on = function (event, handler) {
