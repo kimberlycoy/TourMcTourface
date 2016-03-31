@@ -7,16 +7,33 @@ function Tour(options) {
             display: 500
         }
     };
-    $.extend(true, this.options, options);
 
-    this.i = -1;
-    this.steps = this.options.steps;
-    delete this.options.steps;
-
-    this.$document = $(document).trigger('tour.start', 'start', this);
+    this.$document = $(document);
     this.$window = $(window);
     this.$body = $('body');
+
+    this.init(options);
 }
+
+Tour.prototype.init = function (options) {
+    $.extend(true, this.options, options || {});
+
+    this.i = -1;
+    this.steps = this.options.steps || [];
+};
+
+Tour.prototype.resetSteps = function () {
+    this.steps.length = 0;
+};
+
+Tour.prototype.setSteps = function (steps) {
+    this.resetSteps();
+    this.addSteps(steps);
+};
+
+Tour.prototype.addSteps = function (steps) {
+    this.steps.concat(steps);
+};
 
 Tour.prototype.on = function (event, handler) {
     this.$document.on('tour.' + event, function (e, event, tour, step) {
@@ -33,8 +50,12 @@ Tour.prototype.trigger = function (event) {
 };
 
 Tour.prototype.start = function () {
+    if (this.started) this.stop();
+    this.started = true;
+
     console.log('Tour.start');
 
+    this.$document.trigger('tour.start', 'start', this);
     this.$body.addClass('tour-on');
 
     this.createContainer();
@@ -352,6 +373,7 @@ Step.prototype.initEvent = function () {
     var self = this;
 
     if (event !== 'next') {
+        var triggered = false;
 
         this.eventListener = function (event) {
             var ok = true;
@@ -371,9 +393,13 @@ Step.prototype.initEvent = function () {
 
         if (this.prevent) {
             this.tour.$document.on(this.prevent.event, this.prevent.selector, function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-                self._focus();
+                if (triggered) {
+                    self.tour.$document.off(self.prevent.event, self.prevent.selector);
+                } else {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    self._focus();
+                }
             });
         }
 
