@@ -27,20 +27,27 @@ $(function () {
         event: 'click',
         selector: '.dropdown-menu li:nth-child(2) a',
         content: 'Select "Another Action"',
-        prevent: {
-            event: 'click',
-            selector: '.dropdown'
-        } 
+        css: {
+            '.dropdown, .dropdown *': {
+                'pointer-events': 'none'
+            },
+            '.dropdown-menu li:nth-child(2) a': {
+                'pointer-events': 'auto'
+            }
+        },
+        class: {
+            '.dropdown': 'smith'
+        }
     }, {
         event: 'change',
         selector: 'input[type="checkbox"]',
         content: 'Check me',
-        require: 'on' 
+        require: 'on'
     }, {
         event: 'input',
         selector: 'input[placeholder="go"]',
         content: 'Enter "go".',
-        require: 'go' 
+        require: 'go'
     }, {
         event: 'dragstart',
         selector: '.one-drag',

@@ -385,7 +385,6 @@ Step.prototype.initEvent = function () {
     var self = this;
 
     if (event !== 'next') {
-        var triggered = false;
 
         this.eventListener = function (event) {
             var ok = true;
@@ -393,7 +392,6 @@ Step.prototype.initEvent = function () {
                 ok = false;
             }
             if (ok) {
-                triggered = true;
                 self.tour.next();
             }
         };
@@ -402,18 +400,6 @@ Step.prototype.initEvent = function () {
             this.event,
             this._eventType === 'custom' ? undefined : this._eventSelector,
             this.eventListener);
-
-        if (this.prevent) {
-            this.tour.$document.on(this.prevent.event, this.prevent.selector, function (e) {
-                if (triggered) {
-                    self.tour.$document.off(self.prevent.event, self.prevent.selector);
-                } else {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    self._focus();
-                }
-            });
-        }
 
         if (this._eventElement && this._eventElement.is(':input')) {
             this._eventElement.on('blur', function (e) {
@@ -431,6 +417,27 @@ Step.prototype.initNext = function () {
     return this;
 };
 
+Step.prototype._css = function (fn) {
+    if (!this.css) return this;
+
+    $.each(this.css, function (selector, css) {
+        if (fn === 'remove') $.each(css, function (name) { css[name] = ""; });
+        $(selector).css(css);
+    });
+
+    return this;
+};
+
+Step.prototype._class = function (fn) {
+    if (!this.class) return this;
+
+    $.each(this.class, function (selector, c) {
+        $(selector)[fn + 'Class'](c);
+    });
+
+    return this;
+};
+
 Step.prototype.init = function () {
     var self = this;
 
@@ -440,6 +447,8 @@ Step.prototype.init = function () {
     }, function () {
         self.tour.$document.trigger('tour.step.start', ['step.start', self.tour, self]);
         self.setTarget()
+            ._css('add')
+            ._class('add')
             .setView()
             .setPosition()
             .positionOverlay()
@@ -472,12 +481,13 @@ Step.prototype.off = function () {
     this.tour.$document.trigger('tour.step.next', ['step.next', this.tour, this]);
 
     $('.tour-container, .tour-arrow, .tour-overlay-center').removeClass('tour-display-on');
+    this._css('remove');
+    this._class('remove');
 
     if (this.eventListener) this.tour.$document.off(this.event, this._eventSelector, this.eventListener);
     if (this.scrollListener) this.tour.$window.off('resize', this.scrollListener).off('scroll', this.scrollListener);
 
     if (this._eventElement) this._eventElement.off('blur');
-    if (this.prevent) this.tour.$document.off(this.prevent.event, this.prevent.selector);
 
     if (this._element) {
         this._element.removeClass('tour-target');
