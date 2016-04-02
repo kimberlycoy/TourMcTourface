@@ -281,19 +281,29 @@ Step.prototype.setContent = function () {
     return this;
 };
 
-Step.prototype.setTarget = function () {
-    if (this.selector) {
-        this._element = $(this.selector);
-        this._element.addClass('tour-target');
-    }
+Step.prototype._target = function (fn) {
 
-    this._eventSelector = this.eventSelector || this.event_selector || this.selector;
-    if (this._eventSelector) {
-        this._eventElement = $(this._eventSelector);
-        this._focus();
-    }
+    if (fn === 'on') {
 
-    this._eventType = this.eventType || this.event_type
+        if (this.selector) {
+            this._element = $(this.selector);
+            this._element.addClass('tour-target');
+        }
+
+        this._eventSelector = this.eventSelector || this.event_selector || this.selector;
+        if (this._eventSelector) {
+            this._eventElement = $(this._eventSelector);
+            this._focus();
+        }
+
+        this._eventType = this.eventType || this.event_type
+
+    } else {
+
+        $('.tour-container, .tour-arrow, .tour-overlay-center').removeClass('tour-display-on');
+        if (this._element) this._element.removeClass('tour-target');
+        
+    }
 
     return this;
 };
@@ -360,10 +370,12 @@ Step.prototype.initScrollTo = function () {
     }, scrollTo.delay);
 }
 
-Step.prototype.initScroll = function () {
+Step.prototype._scroll = function (fn) {
+    if (!this.selector) return this;
+
     var self = this;
 
-    if (this.selector) {
+    if (fn === 'on') {
         this.scrollListener = function () {
             self.setView()
                 .setPosition()
@@ -372,6 +384,8 @@ Step.prototype.initScroll = function () {
                 .positionArrow();
         };
         this.tour.$window.on('resize', self.scrollListener).on('scroll', self.scrollListener);
+    } else if (this.scrollListener) {
+        this.tour.$window.off('resize', this.scrollListener).off('scroll', this.scrollListener);
     }
 
     return this;
@@ -381,10 +395,10 @@ Step.prototype._focus = function () {
     if (this.focus !== false && this._eventElement) this._eventElement.focus();
 }
 
-Step.prototype.initEvent = function () {
+Step.prototype._event = function (fn) {
     var self = this;
 
-    if (event !== 'next') {
+    if (fn === 'on' && event !== 'next') {
 
         this.eventListener = function (event) {
             var ok = true;
@@ -401,17 +415,15 @@ Step.prototype.initEvent = function () {
             this._eventType === 'custom' ? undefined : this._eventSelector,
             this.eventListener);
 
-        if (this._eventElement && this._eventElement.is(':input')) {
-            this._eventElement.on('blur', function (e) {
-                self._focus();
-            });
-        }
+    } else if (fn === 'off' && this.eventListener) {
+
+        this.tour.$document.off(this.event, this._eventSelector, this.eventListener);
     }
 
     return this;
 };
 
-Step.prototype.initNext = function () {
+Step.prototype._showNext = function () {
     // show/hide next button
     this.tour.showNext(this.showNext || (this.event || 'next').toLowerCase() === 'next');
     return this;
@@ -424,6 +436,22 @@ Step.prototype._css = function (fn) {
         if (fn === 'remove') $.each(css, function (name) { css[name] = ""; });
         $(selector).css(css);
     });
+
+    return this;
+};
+
+Step.prototype._blur = function (fn) {
+    if (!this._eventElement) return this;
+
+    var self = this;
+
+    if (fn === 'on') {
+        this._eventElement.on('blur', function (e) {
+            self._focus();
+        });
+    } else {
+        this._eventElement.off('blur');
+    }
 
     return this;
 };
@@ -446,7 +474,7 @@ Step.prototype.init = function () {
         onceOnly: true
     }, function () {
         self.tour.$document.trigger('tour.step.start', ['step.start', self.tour, self]);
-        self.setTarget()
+        self._target('on')
             ._css('add')
             ._class('add')
             .setView()
@@ -458,9 +486,10 @@ Step.prototype.init = function () {
         self.initScrollTo();
     });
 
-    self.initScroll()
-        .initEvent()
-        .initNext();
+    self._scroll('on')
+        ._event('on')
+        ._blur('on')
+        ._showNext();
 
     return this;
 };
@@ -480,17 +509,12 @@ Step.prototype.on = function () {
 Step.prototype.off = function () {
     this.tour.$document.trigger('tour.step.next', ['step.next', this.tour, this]);
 
-    $('.tour-container, .tour-arrow, .tour-overlay-center').removeClass('tour-display-on');
-    this._css('remove');
-    this._class('remove');
+    this._target('off')
+        ._css('remove')
+        ._class('remove')
+        ._blur('off')
+        ._scroll('off')
+        ._event('off');
 
-    if (this.eventListener) this.tour.$document.off(this.event, this._eventSelector, this.eventListener);
-    if (this.scrollListener) this.tour.$window.off('resize', this.scrollListener).off('scroll', this.scrollListener);
-
-    if (this._eventElement) this._eventElement.off('blur');
-
-    if (this._element) {
-        this._element.removeClass('tour-target');
-    }
     return this;
 };

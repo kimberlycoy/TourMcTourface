@@ -3,14 +3,14 @@
 }
 
 .tour-overlay {
-    z-index: 200;
+    z-index: 2000;
     position: fixed;
     background: rgba(4, 22, 40,0.75);
     will-change: left, top, width, height;
 }
 
 .tour-container {
-    z-index: 201;
+    z-index: 2001;
     position: fixed;
     color: rgba(255,255,255,0.8);
     font-size: large;
@@ -25,9 +25,10 @@
 }
 
 .tour-arrow {
-    z-index: 201;
+    z-index: 2001;
     position: fixed;
     opacity: 0;
+    pointer-events: none;
 }
 
 .tour-arrow path {
