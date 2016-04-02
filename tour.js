@@ -21,10 +21,12 @@ Tour.prototype.init = function (options) {
 
     this.i = -1;
     this.steps = this.options.steps || [];
+    console.log('tour.init:', this.options);
 };
 
 Tour.prototype.setOptions = function (options) {
     $.extend(true, this.options, options || {});
+    console.log('tour.options:', this.options);
 };
 
 Tour.prototype.resetSteps = function () {
