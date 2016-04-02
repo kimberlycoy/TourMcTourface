@@ -405,8 +405,8 @@ Step.prototype._event = function (fn) {
     var self = this;
 
     if (fn === 'on' && event !== 'next') {
-
-        this.eventListener = function (event) {
+        var selector = this._eventType === 'custom' ? undefined : this._eventSelector;
+        this.tour.$document.one(this.event, selector, function (event) {
             var ok = true;
             if ($.type(self.require) === 'string' && self._eventElement.val() !== self.require) {
                 ok = false;
@@ -414,16 +414,7 @@ Step.prototype._event = function (fn) {
             if (ok) {
                 self.tour.next();
             }
-        };
-
-        this.tour.$document.on(
-            this.event,
-            this._eventType === 'custom' ? undefined : this._eventSelector,
-            this.eventListener);
-
-    } else if (fn === 'off' && this.eventListener) {
-
-        this.tour.$document.off(this.event, this._eventSelector, this.eventListener);
+        });
     }
 
     return this;
@@ -513,6 +504,7 @@ Step.prototype.init = function () {
 
 Step.prototype.on = function () {
     var self = this;
+    this.i = this.tour.i;
 
     setTimeout(function () {
         $('.tour-container, .tour-overlay-center').addClass('tour-display-on');
