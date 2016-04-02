@@ -23,6 +23,10 @@ Tour.prototype.init = function (options) {
     this.steps = this.options.steps || [];
 };
 
+Tour.prototype.setOptions = function (options) {
+    $.extend(true, this.options, options || {});
+};
+
 Tour.prototype.resetSteps = function () {
     this.steps.length = 0;
 };
