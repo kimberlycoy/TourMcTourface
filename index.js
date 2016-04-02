@@ -27,17 +27,23 @@ $(function () {
         event: 'click',
         selector: '.dropdown-menu li:nth-child(2) a',
         content: 'Select "Another Action"',
-        css: {
-            '.dropdown, .dropdown *': {
-                'pointer-events': 'none'
-            },
-            '.dropdown-menu li:nth-child(2) a': {
+        css: [
+            {
+                selector: '.dropdown, .dropdown *',
+                css: {
+                    'pointer-events': 'none'
+                }
+            }, {
+                selector: '.dropdown-menu li:nth-child(2) a',
                 'pointer-events': 'auto'
             }
-        },
-        class: {
-            '.dropdown': 'smith'
-        }
+        ],
+        class: [
+            {
+                selector: '.dropdown', 
+                class: 'smith'
+            }
+        ]
     }, {
         event: 'change',
         selector: 'input[type="checkbox"]',

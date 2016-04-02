@@ -302,7 +302,7 @@ Step.prototype._target = function (fn) {
 
         $('.tour-container, .tour-arrow, .tour-overlay-center').removeClass('tour-display-on');
         if (this._element) this._element.removeClass('tour-target');
-        
+
     }
 
     return this;
@@ -432,10 +432,16 @@ Step.prototype._showNext = function () {
 Step.prototype._css = function (fn) {
     if (!this.css) return this;
 
-    $.each(this.css, function (selector, css) {
-        if (fn === 'remove') $.each(css, function (name) { css[name] = ""; });
-        $(selector).css(css);
-    });
+    if ($.isArray(this.css)) {
+        $.each(this.css, function (obj) {
+            if (fn === 'remove') $.each(obj.css, function (name) { obj.css[name] = ""; });
+            $(obj.selector).css(obj.css);
+        });
+    } else {
+        var obj = this.css;
+        if (fn === 'remove') $.each(obj.css, function (name) { obj.css[name] = ""; });
+        $(obj.selector).css(obj.css);
+    }
 
     return this;
 };
@@ -459,9 +465,14 @@ Step.prototype._blur = function (fn) {
 Step.prototype._class = function (fn) {
     if (!this.class) return this;
 
-    $.each(this.class, function (selector, c) {
-        $(selector)[fn + 'Class'](c);
-    });
+    if ($.isArray) {
+        $.each(this.class, function (obj) {
+            $(obj.selector)[fn + 'Class'](obj.class);
+        });
+    } else {
+        var obj = this.class;
+        $(obj.selector)[fn + 'Class'](obj.class);
+    }
 
     return this;
 };
