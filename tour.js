@@ -407,9 +407,7 @@ Step.prototype._event = function (fn) {
     var selector = this._eventType === 'custom' ? undefined : this._eventSelector;
 
     if (fn === 'on' && this.event && this.event !== 'next') {
-        console.log('step.event.on:', namespacedEvent, selector);
         this.tour.$document.on(namespacedEvent, selector, function (e) {
-            console.log('tour.event.on:', e);
             var ok = true;
             if ($.type(self.require) === 'string' && self._eventElement.val() !== self.require) {
                 ok = false;
@@ -419,7 +417,6 @@ Step.prototype._event = function (fn) {
             }
         });
     } else if (fn === 'off') {
-        console.log('step.event.off:', namespacedEvent);
         this.tour.$document.off(namespacedEvent);
     }
 
