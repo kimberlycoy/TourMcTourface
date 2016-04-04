@@ -403,10 +403,13 @@ Step.prototype._focus = function () {
 
 Step.prototype._event = function (fn) {
     var self = this;
+    var namespacedEvent = this.event + '.TourMcTourface.step';
+    var selector = this._eventType === 'custom' ? undefined : this._eventSelector;
 
-    if (fn === 'on' && event !== 'next') {
-        var selector = this._eventType === 'custom' ? undefined : this._eventSelector;
-        this.tour.$document.one(this.event, selector, function (event) {
+    if (fn === 'on' && this.event && this.event !== 'next') {
+        console.log('step.event.on:', namespacedEvent, selector);
+        this.tour.$document.on(namespacedEvent, selector, function (e) {
+            console.log('tour.event.on:', e);
             var ok = true;
             if ($.type(self.require) === 'string' && self._eventElement.val() !== self.require) {
                 ok = false;
@@ -415,6 +418,9 @@ Step.prototype._event = function (fn) {
                 self.tour.next();
             }
         });
+    } else if (fn === 'off') {
+        console.log('step.event.off:', namespacedEvent);
+        this.tour.$document.off(namespacedEvent);
     }
 
     return this;
