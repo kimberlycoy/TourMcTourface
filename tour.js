@@ -377,8 +377,6 @@ Step.prototype.initScrollTo = function () {
 }
 
 Step.prototype._scroll = function (fn) {
-    if (!this.selector) return this;
-
     var self = this;
 
     if (fn === 'on') {
@@ -389,9 +387,13 @@ Step.prototype._scroll = function (fn) {
                 .positionContent()
                 .positionArrow();
         };
-        this.tour.$window.on('resize', self.scrollListener).on('scroll', self.scrollListener);
+        this.tour.$window
+            .on('resize', self.scrollListener)
+            .on('scroll', self.scrollListener);
     } else if (this.scrollListener) {
-        this.tour.$window.off('resize', this.scrollListener).off('scroll', this.scrollListener);
+        this.tour.$window
+            .off('resize', this.scrollListener)
+            .off('scroll', this.scrollListener);
     }
 
     return this;
