@@ -410,6 +410,7 @@ Step.prototype._event = function (fn) {
 
     if (fn === 'on' && this.event && this.event !== 'next') {
         this.tour.$document.on(namespacedEvent, selector, function (e) {
+            console.log('tour, event:', self.event);
             var ok = true;
             if ($.type(self.require) === 'string' && self._eventElement.val() !== self.require) {
                 ok = false;
@@ -435,7 +436,7 @@ Step.prototype._css = function (fn) {
     if (!this.css) return this;
 
     if ($.isArray(this.css)) {
-        $.each(this.css, function (obj) {
+        $.each(this.css, function (i, obj) {
             if (fn === 'remove') $.each(obj.css, function (name) { obj.css[name] = ""; });
             $(obj.selector).css(obj.css);
         });

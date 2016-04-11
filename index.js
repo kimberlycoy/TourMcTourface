@@ -35,7 +35,9 @@ $(function () {
                 }
             }, {
                 selector: '.dropdown-menu li:nth-child(2) a',
-                'pointer-events': 'auto'
+                css: {
+                    'pointer-events': 'auto'
+                }
             }
         ],
         class: [
@@ -50,7 +52,7 @@ $(function () {
         content: 'Check me',
         require: 'on'
     }, {
-        event: 'input',
+        event: 'change',
         selector: 'input[placeholder="go"]',
         content: 'Enter "go".',
         require: 'go'
