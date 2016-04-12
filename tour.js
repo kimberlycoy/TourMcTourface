@@ -414,22 +414,22 @@ Step.prototype._event = function (fn) {
     var self = this;
     var namespacedEvent = this.event + '.TourMcTourface.step';
     var selector = this._eventType === 'custom' ? undefined : this._eventSelector;
+    var pattern;
+    if ($.type(this.require) === 'string') {
+        pattern = new RegExp(this.require);
+    } 
 
     if (fn === 'on' && this.event && this.event !== 'next') {
 
         this.tour.$document.on(namespacedEvent, selector, function (e) {
-            var ok = true;
-            if ($.type(self.require) === 'string' && self._eventElement.val() !== self.require) {
-                ok = false;
-            }
-            if (ok) {
+            if (!pattern || pattern.test(self._eventElement.val())) {
                 self.tour.next();
             }
         });
 
-        if (this._eventElement && $.type(self.require) === 'string' && this.showNext) {
+        if (this._eventElement && pattern && this.showNext) {
             this.tour.$document.on('input.TourMcTourface.step.require', this._eventSelector, function (e) {
-                var show = self._eventElement.val() === self.require;
+                var show = pattern.test(self._eventElement.val());
                 self.tour.showNext(show, true);
             });
         }
