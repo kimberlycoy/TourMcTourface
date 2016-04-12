@@ -5,6 +5,7 @@ $(function () {
 
     var steps = [{
         event: 'custom.event',
+        eventType: 'custom',
         // Both "description" and "content" work.
         description: `
             <h1>I'm a custom event</h1> <i>(w/html)!</i>
@@ -55,7 +56,8 @@ $(function () {
         event: 'change',
         selector: 'input[placeholder="go"]',
         content: 'Enter "go".',
-        require: 'go'
+        require: 'go',
+        showNext: true
     }, {
         event: 'dragstart',
         selector: '.one-drag',

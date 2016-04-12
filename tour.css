@@ -1,5 +1,5 @@
-.tour-on{
-    overflow:hidden;
+.tour-on {
+    overflow: hidden;
 }
 
 .tour-overlay {
@@ -14,14 +14,15 @@
     font-size: large;
     text-align: center;
     max-width: 500px;
-    background:#fff;
-    box-shadow:0 0 100px rgba(52, 73, 94,0.5);
-    border-radius:6px;
-    overflow:hidden;
+    background: #fff;
+    box-shadow: 0 0 100px rgba(52, 73, 94, 0.5);
+    border-radius: 6px;
+    overflow: hidden;
+    opacity: 0;
 }
 
-.tour-container br{
-    line-height:30px;
+.tour-container br {
+    line-height: 30px;
 }
 
 .tour-arrow {
@@ -33,7 +34,7 @@
 
 .tour-arrow path {
     fill: none;
-    stroke: rgba(52, 73, 94,0.5);
+    stroke: rgba(52, 73, 94, 0.5);
     stroke-width: 2px;
 }
 
@@ -54,28 +55,28 @@
 
 .tour-content {
     text-align: left;
-    padding:30px 40px;
+    padding: 30px 40px;
 }
 
-.tour-buttons{
-    text-align:right;
-    background:#f9f9f9;
-    border-top:1px solid #eee;
+.tour-buttons {
+    text-align: right;
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
 }
 
-.tour-buttons button{
-    margin-top:-1px;
-    padding:12px 25px;
-    font-size:16px;
-    color:#fff;
-    background:#3498db;
-    border:none;
+.tour-buttons button {
+    margin-top: -1px;
+    padding: 12px 25px;
+    font-size: 16px;
+    color: #fff;
+    background: #3498db;
+    border: none;
 }
 
-.tour-buttons button:hover{
-    background-color:#2980b9;
+.tour-buttons button:hover {
+    background-color: #2980b9;
 }
 
-.tour-buttons button:focus{
-    outline:none;
+.tour-buttons button:focus {
+    outline: none;
 }
