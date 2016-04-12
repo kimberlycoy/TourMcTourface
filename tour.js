@@ -1,6 +1,9 @@
 function Tour(options) {
     this.options = {
         margin: 0,
+        showNext: {
+            duration: 250
+        },
         scrollTo: {
             duration: 800,
             offset: { top: -10 },
@@ -139,8 +142,12 @@ Tour.prototype.stop = function () {
     }, 2000);
 };
 
-Tour.prototype.showNext = function (show) {
-    show ? this.nextButton.show() : this.nextButton.hide();
+Tour.prototype.showNext = function (show, animate) {
+    if (show) {
+        this.nextButton.show(animate ? this.options.showNext : undefined);
+    } else {
+        this.nextButton.hide();
+    }
 };
 
 Tour.prototype.createOverlay = function () {
@@ -409,8 +416,8 @@ Step.prototype._event = function (fn) {
     var selector = this._eventType === 'custom' ? undefined : this._eventSelector;
 
     if (fn === 'on' && this.event && this.event !== 'next') {
+
         this.tour.$document.on(namespacedEvent, selector, function (e) {
-            console.log('tour, event:', self.event);
             var ok = true;
             if ($.type(self.require) === 'string' && self._eventElement.val() !== self.require) {
                 ok = false;
@@ -419,8 +426,17 @@ Step.prototype._event = function (fn) {
                 self.tour.next();
             }
         });
+
+        if (this._eventElement && $.type(self.require) === 'string' && this.showNext) {
+            this.tour.$document.on('input.TourMcTourface.step.require', this._eventSelector, function (e) {
+                var show = self._eventElement.val() === self.require;
+                self.tour.showNext(show, true);
+            });
+        }
+
     } else if (fn === 'off') {
         this.tour.$document.off(namespacedEvent);
+        this.tour.$document.off('input.TourMcTourface.step.require');
     }
 
     return this;
@@ -428,7 +444,7 @@ Step.prototype._event = function (fn) {
 
 Step.prototype._showNext = function () {
     // show/hide next button
-    this.tour.showNext(this.showNext || (this.event || 'next').toLowerCase() === 'next');
+    this.tour.showNext((this.showNext && !this.require) || (this.event || 'next').toLowerCase() === 'next');
     return this;
 };
 
