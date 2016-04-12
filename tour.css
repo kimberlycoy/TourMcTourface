@@ -5,19 +5,19 @@
 .tour-overlay {
     z-index: 2000;
     position: fixed;
-    background: rgba(4, 22, 40,0.75);
     will-change: left, top, width, height;
 }
 
 .tour-container {
     z-index: 2001;
     position: fixed;
-    color: rgba(255,255,255,0.8);
     font-size: large;
-    padding: 20px;
     text-align: center;
     max-width: 500px;
-    opacity: 0;
+    background:#fff;
+    box-shadow:0 0 100px rgba(52, 73, 94,0.5);
+    border-radius:6px;
+    overflow:hidden;
 }
 
 .tour-container br{
@@ -33,7 +33,7 @@
 
 .tour-arrow path {
     fill: none;
-    stroke: #FFF;
+    stroke: rgba(52, 73, 94,0.5);
     stroke-width: 2px;
 }
 
@@ -53,22 +53,27 @@
 }
 
 .tour-content {
-    width: 100%;
     text-align: left;
+    padding:30px 40px;
+}
+
+.tour-buttons{
+    text-align:right;
+    background:#f9f9f9;
+    border-top:1px solid #eee;
 }
 
 .tour-buttons button{
-    padding:10px 40px;
-    font-size:20px;
+    margin-top:-1px;
+    padding:12px 25px;
+    font-size:16px;
     color:#fff;
-    border-radius:9999px;
-    background:rgba(0,0,0,0.2);
-    border:2px solid #fff;
-    margin-top:20px;
+    background:#3498db;
+    border:none;
 }
 
 .tour-buttons button:hover{
-    background-color:rgba(0,0,0,0.4);
+    background-color:#2980b9;
 }
 
 .tour-buttons button:focus{
