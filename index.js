@@ -56,7 +56,7 @@ $(function () {
         event: 'change',
         selector: 'input[placeholder="go"]',
         content: 'Enter "go".',
-        require: 'go',
+        require: 'g.+',
         showNext: true
     }, {
         event: 'dragstart',
