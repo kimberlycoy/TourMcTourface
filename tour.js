@@ -119,7 +119,13 @@ Tour.prototype.createContainer = function () {
 };
 
 Tour.prototype.next = function () {
+    // debounce next()
+    var now = Date.now();
+    if (now - (this._lastNext || 0) < 250) return; 
+    this._lastNext = now; 
+
     if (this.currentStep) this.currentStep.off();
+
     this.i++;
     if (this.i < this.steps.length) {
         this.currentStep = new Step(this.steps[this.i], this).on();
