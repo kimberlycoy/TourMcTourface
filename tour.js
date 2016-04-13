@@ -4,6 +4,9 @@ function Tour(options) {
         showNext: {
             duration: 250
         },
+        emptyStep: {
+            css: {}
+        },
         scrollTo: {
             duration: 800,
             offset: { top: -10 },
@@ -296,7 +299,14 @@ Step.prototype.positionContent = function () {
 };
 
 Step.prototype.setContent = function () {
-    $('.tour-content').html(this.content || this.description);
+    this._content = this.content || this.description; 
+    if (this._content) {
+        $('.tour-content').html(this._content).show();
+        this._css('remove', this.tour.options.emptyStep.css);
+    } else {
+        $('.tour-content').empty().hide();
+        this._css('add', this.tour.options.emptyStep.css);
+    }
     return this;
 };
 
@@ -454,16 +464,18 @@ Step.prototype._showNext = function () {
     return this;
 };
 
-Step.prototype._css = function (fn) {
-    if (!this.css) return this;
 
-    if ($.isArray(this.css)) {
-        $.each(this.css, function (i, obj) {
+Step.prototype._css = function (fn, css) {
+    css = css || this.css;
+    if (!css) return this;
+
+    if ($.isArray(css)) {
+        $.each(css, function (i, obj) {
             if (fn === 'remove') $.each(obj.css, function (name) { obj.css[name] = ""; });
             $(obj.selector).css(obj.css);
         });
     } else {
-        var obj = this.css;
+        var obj = css;
         if (fn === 'remove') $.each(obj.css, function (name) { obj.css[name] = ""; });
         $(obj.selector).css(obj.css);
     }
