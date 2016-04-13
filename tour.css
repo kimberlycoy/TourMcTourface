@@ -80,3 +80,13 @@
 .tour-buttons button:focus {
     outline: none;
 }
+
+@media (max-width: 500px) { 
+    .tour-container{
+        opacity:0!important;
+    }
+
+    .tour-overlay{
+        display:none;
+    }
+}
