@@ -85,4 +85,8 @@
     .tour-container{
         opacity:0!important;
     }
+
+    .tour-overlay{
+        display:none;
+    }
 }
