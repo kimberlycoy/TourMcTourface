@@ -75,7 +75,8 @@ $(function () {
     }, {
         event: 'next',
         selector: '.three',
-        content: "Three. Aenean faucibus lobortis orci quis ullamcorper. Pellentesque nec faucibus massa, eget consequat arcu. Quisque hendrerit sapien congue metus iaculis, eu interdum mauris luctus. Vivamus non fermentum magna, eu pulvinar nibh. Donec eleifend at leo sit amet vulputate. Donec vel vehicula nibh."
+        position: 'top',
+        content: "Three. Aenean faucibus lobortis orci quis ullamcorper. Pellentesque nec faucibus massa, eget consequat arcu. Quisque hendrerit sapien congue metus iaculis, eu interdum mauris luctus."
     }, {
         event: 'next',
         selector: '.four',
