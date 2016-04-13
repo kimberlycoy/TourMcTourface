@@ -124,8 +124,8 @@ Tour.prototype.createContainer = function () {
 Tour.prototype.next = function () {
     // debounce next()
     var now = Date.now();
-    if (now - (this._lastNext || 0) < 250) return; 
-    this._lastNext = now; 
+    if (now - (this._lastNext || 0) < 250) return;
+    this._lastNext = now;
 
     if (this.currentStep) this.currentStep.off();
 
@@ -257,37 +257,52 @@ Step.prototype.setView = function () {
     return this;
 };
 
-Step.prototype.getPositionDescription = function () {
-    if ($.type(this.position) === 'string') return this.position.toLowerCase();
-    if ($.isPlainObject(this.position)) return "custom";
-    if (this._position.right <= this.view.widthHalf) return 'right';
-    if (this._position.left >= this.view.widthHalf) return 'left';
-    return 'bottom';
+Step.prototype.setContainerPositionDescription = function () {
+    if ($.type(this.position) === 'string') {
+        this._containerPosition.description = this.position.toLowerCase();
+    } else if ($.isPlainObject(this.position)) {
+        this._containerPosition.description = "custom";
+    } else if (this._position.right <= this.view.widthHalf) {
+        this._containerPosition.description = 'right';
+    } else if (this._position.left >= this.view.widthHalf) {
+        this._containerPosition.description = 'left';
+    } else {
+        this._containerPosition.description = 'bottom';
+    }
+    return this._containerPosition.description;
+};
+
+Step.prototype._isContainerPosition = function (desc) {
+    return this._containerPosition.description === desc;
 };
 
 Step.prototype.positionContent = function () {
     if (this.selector) {
-
-        var position = {
+        this._containerPosition = {
             top: this._position.bottom + 75 + this.getMargin(),
             left: 'auto',
             right: 'auto',
             transform: ''
         };
-        var description = this.getPositionDescription();
+        this.setContainerPositionDescription();
 
-        if (description === 'right') {
-            position.left = this._position.center.left + 110;
-        } else if (description === 'left') {
-            position.right = this._position.center.right + 110;
-        } else if (description === 'custom') {
-            $(position, this._position);
+        if (this._isContainerPosition('right')) {
+            this._containerPosition.left = this._position.center.left + 100;
+        } else if (this._isContainerPosition('left')) {
+            this._containerPosition.right = this._position.center.right + 100;
+        } else if (this._isContainerPosition('top')) {
+            var height = this.tour.$container.height();
+            this._containerPosition.top = this._position.top - height - 75 - this.getMargin();
+            this._containerPosition.left = this._position.center.left;
+            this._containerPosition.transform = 'translateX(-50%)';
+        } else if (this._isContainerPosition('custom')) {
+            $(this._containerPosition, this._position);
         } else {
-            position.left = this._position.center.left;
-            position.transform = 'translateX(-50%)';
+            this._containerPosition.left = this._position.center.left;
+            this._containerPosition.transform = 'translateX(-50%)';
         }
 
-        this.tour.$container.css(position).data('position', description);
+        this.tour.$container.css(this._containerPosition);
     } else {
         this.tour.$container.css({
             top: '50%',
@@ -299,7 +314,7 @@ Step.prototype.positionContent = function () {
 };
 
 Step.prototype.setContent = function () {
-    this._content = this.content || this.description; 
+    this._content = this.content || this.description;
     if (this._content) {
         $('.tour-content').html(this._content).show();
         this._css('remove', this.tour.options.emptyStep.css);
@@ -343,20 +358,29 @@ Step.prototype.positionArrow = function () {
         $.extend(containerPosition, this.tour.$container[0].getBoundingClientRect());
         containerPosition.right = this._position.left + this._position.width;
         containerPosition.bottom = this._position.top + this._position.height;
-        containerPosition.description = this.tour.$container.data('position');
+        containerPosition.description = this._containerPosition.description;
 
         var css = {
             top: this._position.bottom + this.getMargin(),
             left: this._position.center.left - this.tour.markerWidth,
             right: 'auto',
-            height: 'auto'
+            height: 'auto',
+            transform: ''
         };
+        css['transform-origin'] = '';
+
         var path = 'M5,2 C20,100 30,110 100,108';
 
         if (containerPosition.description === 'left') {
             path = 'M95,2 C80,100 70,110 0,108';
             css.left = css.left - 90;
         } else if (containerPosition.description === 'bottom') {
+            css.height = 70;
+            css.left = css.left - 40;
+        } else if (containerPosition.description === 'top') {
+            css.transform = 'rotate(180deg)';
+            css['transform-origin'] = '0 0';
+            css.top = this._position.top - this.getMargin();
             css.height = 70;
             css.left = css.left - 40;
         }
@@ -387,7 +411,7 @@ Step.prototype.setPosition = function () {
     return this;
 };
 
-Step.prototype.initScrollTo = function () {
+Step.prototype._scrollTo = function () {
     if (!this._element || this.scrollTo === false) return this;
 
     var self = this;
@@ -395,11 +419,13 @@ Step.prototype.initScrollTo = function () {
     $.extend(scrollTo, $.isPlainObject(self.scrollTo) ? self.scrollTo : {});
 
     setTimeout(function () {
-        self.tour.$document.scrollTo(self._element, scrollTo);
+        var element = self._element; 
+        if (self._isContainerPosition('top')) element = self.tour.$container;
+        self.tour.$document.scrollTo(element, scrollTo);
     }, scrollTo.delay);
 }
 
-Step.prototype._scroll = function (fn) {
+Step.prototype._onScroll = function (fn) {
     var self = this;
 
     if (fn === 'on') {
@@ -426,14 +452,14 @@ Step.prototype._focus = function () {
     if (this.focus !== false && this._eventElement) this._eventElement.focus();
 }
 
-Step.prototype._event = function (fn) {
+Step.prototype._onEvent = function (fn) {
     var self = this;
     var namespacedEvent = this.event + '.TourMcTourface.step';
     var selector = this._eventType === 'custom' ? undefined : this._eventSelector;
     var pattern;
     if ($.type(this.require) === 'string') {
         pattern = new RegExp(this.require);
-    } 
+    }
 
     if (fn === 'on' && this.event && this.event !== 'next') {
 
@@ -474,7 +500,7 @@ Step.prototype._css = function (fn, css) {
             if (fn === 'remove') $.each(obj.css, function (name) { obj.css[name] = ""; });
             $(obj.selector).css(obj.css);
         });
-    } else {
+    } else if (css.selector) {
         var obj = css;
         if (fn === 'remove') $.each(obj.css, function (name) { obj.css[name] = ""; });
         $(obj.selector).css(obj.css);
@@ -483,7 +509,7 @@ Step.prototype._css = function (fn, css) {
     return this;
 };
 
-Step.prototype._blur = function (fn) {
+Step.prototype._onBlur = function (fn) {
     if (!this._eventElement) return this;
 
     var self = this;
@@ -529,15 +555,15 @@ Step.prototype.init = function () {
             .setPosition()
             .positionOverlay()
             .setContent()
+            ._showNext()
             .positionContent()
-            .positionArrow();
-        self.initScrollTo();
+            .positionArrow()
+            ._scrollTo();
     });
 
-    self._scroll('on')
-        ._event('on')
-        ._blur('on')
-        ._showNext();
+    self._onScroll('on')
+        ._onEvent('on')
+        ._onBlur('on');
 
     return this;
 };
@@ -561,9 +587,9 @@ Step.prototype.off = function () {
     this._target('off')
         ._css('remove')
         ._class('remove')
-        ._blur('off')
-        ._scroll('off')
-        ._event('off');
+        ._onBlur('off')
+        ._onScroll('off')
+        ._onEvent('off');
 
     return this;
 };
