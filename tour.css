@@ -43,12 +43,6 @@
     opacity: 1 !important;
 }
 
-.tour-overlay-center.tour-display-on {
-    transition: background 1.2s ease, z-index 0s linear 0.8s;
-    background: rgba(0, 0, 0, 0);
-    z-index: -100;
-}
-
 .tour-container .tour-next {
     display: none;
 }
