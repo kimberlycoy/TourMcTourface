@@ -84,7 +84,8 @@ a.tour-target:focus {
     outline: none;
 }
 
-*:not(.tour-target) {
+*:not(.tour-target),
+*:not(.tour-buttons button) {
     pointer-events: none;
 }
 
