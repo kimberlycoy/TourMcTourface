@@ -22,7 +22,7 @@
 }
 
 .tour-container br {
-    line-height: 30px;
+    line-height: 50px;
 }
 
 .tour-arrow {
@@ -44,7 +44,6 @@
 }
 
 .tour-overlay-center.tour-display-on {
-    transition: background 1.2s ease, z-index 0s linear 0.8s;
     background: rgba(0, 0, 0, 0);
     z-index: -100;
 }
