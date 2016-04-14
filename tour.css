@@ -80,19 +80,12 @@
     outline: none;
 }
 
-a.tour-target:focus {
-    outline: none;
-}
-
-*:not(.tour-target) {
-    pointer-events: none;
-}
-
-@media (max-width: 500px) {
-    .tour-container {
-        opacity: 0!important;
+@media (max-width: 500px) { 
+    .tour-container{
+        opacity:0!important;
     }
-    .tour-overlay {
-        display: none;
+
+    .tour-overlay{
+        display:none;
     }
 }
