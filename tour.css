@@ -13,7 +13,7 @@
     position: fixed;
     font-size: large;
     text-align: center;
-    max-width: 500px;
+    max-width: 600px;
     background: #fff;
     box-shadow: 0 0 100px rgba(52, 73, 94, 0.5);
     border-radius: 6px;
@@ -22,7 +22,7 @@
 }
 
 .tour-container br {
-    line-height: 30px;
+    line-height: 50px;
 }
 
 .tour-arrow {
@@ -41,6 +41,11 @@
 .tour-display-on {
     transition: opacity 1.2s ease;
     opacity: 1 !important;
+}
+
+.tour-overlay-center.tour-display-on {
+    background: rgba(0, 0, 0, 0);
+    z-index: -100;
 }
 
 .tour-container .tour-next {
