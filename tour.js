@@ -117,7 +117,7 @@ Tour.prototype.createContainer = function () {
 
     this.markerWidth = 6;
     this.tourButtons = $('.tour-buttons');
-    this.nextButton = $('.tour-next').on('click', function (e) {
+    this.nextButton = this.tourButtons.find('.tour-next').on('click', function (e) {
         self.next();
     });
 };
