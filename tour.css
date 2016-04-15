@@ -48,10 +48,6 @@
     z-index: -100;
 }
 
-.tour-container .tour-next {
-    display: none;
-}
-
 .tour-content {
     text-align: left;
     padding: 30px 40px;
@@ -61,15 +57,28 @@
     text-align: right;
     background: #f9f9f9;
     border-top: 1px solid #eee;
+    height:0;
 }
 
 .tour-buttons button {
-    margin-top: -1px;
     padding: 12px 25px;
     font-size: 16px;
     color: #fff;
     background: #3498db;
     border: none;
+    transition:all 0.2s;
+    opacity:0;
+    margin-right:-100px;
+    display:inline-block;
+}
+
+.tour-buttons.show-next{
+    height:auto;
+}
+
+.tour-buttons.show-next button{
+    opacity:1;
+    margin-right:0;
 }
 
 .tour-buttons button:hover {
