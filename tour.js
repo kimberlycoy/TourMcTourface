@@ -116,7 +116,8 @@ Tour.prototype.createContainer = function () {
     this.$arrowPath = $('.tour-arrow-path');
 
     this.markerWidth = 6;
-    this.nextButton = $('.tour-next').on('click', function (e) {
+    this.tourButtons = $('.tour-buttons');
+    this.nextButton = this.tourButtons.find('.tour-next').on('click', function (e) {
         self.next();
     });
 };
@@ -153,9 +154,9 @@ Tour.prototype.stop = function () {
 
 Tour.prototype.showNext = function (show, animate) {
     if (show) {
-        this.nextButton.show(animate ? this.options.showNext : undefined);
+        this.tourButtons.addClass('show-next');
     } else {
-        this.nextButton.hide();
+        this.tourButtons.removeClass('show-next');
     }
 };
 
@@ -472,7 +473,7 @@ Step.prototype._onEvent = function (fn) {
         if (this._eventElement && pattern && this.showNext) {
             this.tour.$document.on('input.TourMcTourface.step.require', this._eventSelector, function (e) {
                 var show = pattern.test(self._eventElement.val());
-                self.tour.showNext(show, true);
+                self.tour.showNext(show);
             });
         }
 
