@@ -394,18 +394,21 @@ Step.prototype.positionArrow = function () {
         if (containerPosition.description === 'left') {
             path = 'M95,2 C80,100 70,110 0,108';
             css.left = css.left - 90;
+
         } else if (containerPosition.description === 'top-right') {
             css.transform = 'rotateX(180deg)';
             css['transform-origin'] = '0 0';
             css.top = this._position.top - this.getMargin();
+
         } else if (containerPosition.description === 'top-left') {
             css.transform = 'rotate(180deg)';
             css['transform-origin'] = '0 0';
             css.top = this._position.top - this.getMargin();
             css.left += 10
+
         } else if (containerPosition.description === 'bottom') {
             css.height = 70;
-            css.left = css.left - 40;
+            
         } else if (containerPosition.description === 'top') {
             css.transform = 'rotate(180deg)';
             css['transform-origin'] = '0 0';
