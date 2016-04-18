@@ -373,7 +373,7 @@ Step.prototype._target = function (fn) {
 };
 
 Step.prototype.positionArrow = function () {
-    if (this.selector) {
+    if (this.selector && this.description) {
         var containerPosition = {};
         $.extend(containerPosition, this.tour.$container[0].getBoundingClientRect());
         containerPosition.right = this._position.left + this._position.width;
