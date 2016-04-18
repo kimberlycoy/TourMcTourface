@@ -86,12 +86,9 @@
     background-color: #2980b9;
 }
 
-.tour-buttons button:focus {
-    outline: none;
-}
-
-a.tour-target:focus {
-    outline: none;
+.tour-on button:focus,
+.tour-on a:focus{
+    outline: none!important;
 }
 
 *:not(.tour-target),
