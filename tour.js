@@ -274,6 +274,9 @@ Step.prototype.setContainerPositionDescription = function () {
 };
 
 Step.prototype._isContainerPosition = function (desc) {
+    if (desc instanceof RegExp) {
+        return desc.test(this._containerPosition.description);
+    }
     return this._containerPosition.description === desc;
 };
 
@@ -296,6 +299,16 @@ Step.prototype.positionContent = function () {
             this._containerPosition.top = this._position.top - height - 75 - this.getMargin();
             this._containerPosition.left = this._position.center.left;
             this._containerPosition.transform = 'translateX(-50%)';
+        } else if (this._isContainerPosition('top-right')) {
+            var height = this.tour.$container.height();
+            this._containerPosition.top = this._position.top - height - 75 - this.getMargin();
+            this._containerPosition.left = this._position.center.left + 100;
+        } else if (this._isContainerPosition('top-left')) {
+            var height = this.tour.$container.height();
+            var width = this.tour.$container.width();
+            this._containerPosition.top = this._position.top - height - 75 - this.getMargin();
+            // this._containerPosition.right = this._position.center.right + width/2; 
+            this._containerPosition.right = this._position.center.right + 100;
         } else if (this._isContainerPosition('custom')) {
             $(this._containerPosition, this._position);
         } else {
@@ -375,6 +388,15 @@ Step.prototype.positionArrow = function () {
         if (containerPosition.description === 'left') {
             path = 'M95,2 C80,100 70,110 0,108';
             css.left = css.left - 90;
+        } else if (containerPosition.description === 'top-right') {
+            css.transform = 'rotateX(180deg)';
+            css['transform-origin'] = '0 0';
+            css.top = this._position.top - this.getMargin();
+        } else if (containerPosition.description === 'top-left') {
+            css.transform = 'rotate(180deg)';
+            css['transform-origin'] = '0 0';
+            css.top = this._position.top - this.getMargin();
+            css.left += 10
         } else if (containerPosition.description === 'bottom') {
             css.height = 70;
             css.left = css.left - 40;
@@ -421,7 +443,7 @@ Step.prototype._scrollTo = function () {
 
     setTimeout(function () {
         var element = self._element; 
-        if (self._isContainerPosition('top')) element = self.tour.$container;
+        if (self._isContainerPosition(/top.*/)) element = self.tour.$container;
         self.tour.$document.scrollTo(element, scrollTo);
     }, scrollTo.delay);
 }

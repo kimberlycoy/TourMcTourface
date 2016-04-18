@@ -85,12 +85,23 @@ $(function () {
         event: 'click',
         selector: '.five',
         position: 'left',
-        content: 'position:left'
+        content: 'position:left is bigger and a little bit more must to make it a bit bigger'
+    }, {
+        event: 'click',
+        selector: '.five',
+        position: 'top-left',
+        content: 'position:left is bigger and a little bit more must to make it a bit bigger'
     }, {
         event: 'click',
         event_selector: '.six',
         selector: '.six-container',
         position: 'right',
+        content: 'position:right'
+    }, {
+        event: 'click',
+        event_selector: '.six',
+        selector: '.six-container',
+        position: 'top-left',
         content: 'position:right'
     }];
 
