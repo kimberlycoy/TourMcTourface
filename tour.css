@@ -19,6 +19,7 @@
     border-radius: 6px;
     overflow: hidden;
     opacity: 0;
+    margin: 5px;
 }
 
 .tour-container br {

@@ -79,6 +79,11 @@ $(function () {
         content: "Three. Aenean faucibus lobortis orci quis ullamcorper. Pellentesque nec faucibus massa, eget consequat arcu. Quisque hendrerit sapien congue metus iaculis, eu interdum mauris luctus."
     }, {
         event: 'next',
+        selector: '.three',
+        position: 'top',
+        content: "Three. top short" 
+    }, {
+        event: 'next',
         selector: '.four',
         content: "Four"
     }, {
@@ -90,7 +95,7 @@ $(function () {
         event: 'click',
         selector: '.five',
         position: 'top-left',
-        content: 'position:left is bigger and a little bit more must to make it a bit bigger'
+        content: "Big five<br>Aenean faucibus lobortis orci quis ullamcorper. Pellentesque nec faucibus massa, eget consequat arcu."
     }, {
         event: 'click',
         event_selector: '.six',
@@ -101,8 +106,8 @@ $(function () {
         event: 'click',
         event_selector: '.six',
         selector: '.six-container',
-        position: 'top-left',
-        content: 'position:right'
+        position: 'top-right',
+        content: 'position:top-right'
     }];
 
     var tour = new Tour({

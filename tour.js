@@ -292,25 +292,31 @@ Step.prototype.positionContent = function () {
 
         if (this._isContainerPosition('right')) {
             this._containerPosition.left = this._position.center.left + 100;
+
         } else if (this._isContainerPosition('left')) {
             this._containerPosition.right = this._position.center.right + 100;
+
         } else if (this._isContainerPosition('top')) {
             var height = this.tour.$container.height();
-            this._containerPosition.top = this._position.top - height - 75 - this.getMargin();
+            this._containerPosition.top = this._position.top - height - 85 - this.getMargin();
             this._containerPosition.left = this._position.center.left;
             this._containerPosition.transform = 'translateX(-50%)';
+
         } else if (this._isContainerPosition('top-right')) {
             var height = this.tour.$container.height();
-            this._containerPosition.top = this._position.top - height - 75 - this.getMargin();
+            this._containerPosition.top = this._position.top - height - 85 - this.getMargin();
             this._containerPosition.left = this._position.center.left + 100;
+
         } else if (this._isContainerPosition('top-left')) {
             var height = this.tour.$container.height();
             var width = this.tour.$container.width();
-            this._containerPosition.top = this._position.top - height - 75 - this.getMargin();
+            this._containerPosition.top = this._position.top - height - 85 - this.getMargin();
             // this._containerPosition.right = this._position.center.right + width/2; 
             this._containerPosition.right = this._position.center.right + 100;
+
         } else if (this._isContainerPosition('custom')) {
             $(this._containerPosition, this._position);
+
         } else {
             this._containerPosition.left = this._position.center.left;
             this._containerPosition.transform = 'translateX(-50%)';
@@ -405,7 +411,7 @@ Step.prototype.positionArrow = function () {
             css['transform-origin'] = '0 0';
             css.top = this._position.top - this.getMargin();
             css.height = 70;
-            css.left = css.left - 40;
+            css.left = css.left; 
         }
 
         this.tour.$arrow.css(css);
@@ -441,9 +447,9 @@ Step.prototype._scrollTo = function () {
     var scrollTo = this.tour.options.scrollTo;
     $.extend(scrollTo, $.isPlainObject(self.scrollTo) ? self.scrollTo : {});
 
+    var element = self._element;
+    if (self._isContainerPosition(/top.*/)) element = self.tour.$container;
     setTimeout(function () {
-        var element = self._element; 
-        if (self._isContainerPosition(/top.*/)) element = self.tour.$container;
         self.tour.$document.scrollTo(element, scrollTo);
     }, scrollTo.delay);
 }
