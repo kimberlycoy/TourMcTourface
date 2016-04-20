@@ -114,12 +114,14 @@ $(function () {
         steps: steps
     });
 
-    // tour.on('step.next', function (e, tour, step) {
-    //     console.log('event:', e, tour, step);
-    // });
-    // tour.on('step.start', function (e, tour, step) {
-    //     console.log('event:', e, tour, step);
-    // });
+    var logEvent = function (e, t, step) {
+        console.log('event:', e, t.i, step ? step.i : '');
+    };
+
+    tour.on('start', logEvent); 
+    tour.on('stop', logEvent); 
+    tour.on('step.start', logEvent); 
+    tour.on('step.stop', logEvent); 
 
     tour.start();
 });

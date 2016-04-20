@@ -43,9 +43,9 @@ tour.trigger('custom.event'); or $(document).trigger('custom.event');
 
 # Events
 * `start` - fires on the first step.
-* `end` - fires on the last step in the script.
+* `stop` - fires on the last step in the script.
 * `step.start` - fires before the step is started. 
-* `step.next` - fires when the step is completed or 'Next' is clicked.
+* `step.stop` - fires when the step is completed or 'Next' is clicked.
 ```javascript
 /**
   @param: {string} event The event name.

@@ -22,17 +22,17 @@ function Tour(options) {
     this.init(options);
 }
 
+Tour.namespace = '.TourMcTourface';
+
 Tour.prototype.init = function (options) {
     $.extend(true, this.options, options || {});
 
     this.i = -1;
     this.steps = this.options.steps || [];
-    console.log('tour.init:', this.options);
 };
 
 Tour.prototype.setOptions = function (options) {
     $.extend(true, this.options, options || {});
-    console.log('tour.options:', this.options);
 };
 
 Tour.prototype.resetSteps = function () {
@@ -58,26 +58,24 @@ Tour.prototype.resetCurrentStep = function () {
 };
 
 Tour.prototype.on = function (event, handler) {
-    this.$document.on('tour.' + event, function (e, event, tour, step) {
+    this.$document.on(event + Tour.namespace, function (e, event, tour, step) {
         (handler || $.noop)(event, tour, step);
     });
 };
 
 Tour.prototype.off = function (event, handler) {
-    this.$document.off('tour.' + event, handler);
+    this.$document.off(event + Tour.namespace, handler);
 };
 
 Tour.prototype.trigger = function (event) {
-    this.$document.trigger(event);
+    this.$document.trigger(event + Tour.namespace, [event, this, this.currentStep]);
 };
 
 Tour.prototype.start = function () {
     if (this.started) this.stop();
     this.started = true;
 
-    console.log('Tour.start');
-
-    this.$document.trigger('tour.start', 'start', this);
+    this.trigger('start');
     this.$body.addClass('tour-on');
 
     this.createContainer();
@@ -117,7 +115,7 @@ Tour.prototype.createContainer = function () {
 
     this.markerWidth = 6;
     this.tourButtons = $('.tour-buttons');
-    this.nextButton = this.tourButtons.find('.tour-next').on('click', function (e) {
+    this.nextButton = this.tourButtons.find('.tour-next').on('click' + Tour.namespace, function (e) {
         self.next();
     });
 };
@@ -144,11 +142,12 @@ Tour.prototype.stop = function () {
     this.$arrow.css({ opacity: 0 });
     $('.tour-overlay').css({ opacity: 0 });
     setTimeout(function () {
-        self.$document = $(document).trigger('tour.stop', 'stop', this);
+        self.$document = $(document)
         self.$container.remove();
         self.$arrow.remove();
         $('.tour-overlay').remove();
         self.$body.removeClass('tour-on');
+        self.trigger('stop');
     }, 2000);
 };
 
@@ -486,7 +485,7 @@ Step.prototype._focus = function () {
 
 Step.prototype._onEvent = function (fn) {
     var self = this;
-    var namespacedEvent = this.event + '.TourMcTourface.step';
+    var namespacedEvent = this.event + Tour.namespace; 
     var selector = this._eventType === 'custom' ? undefined : this._eventSelector;
     var pattern;
     if ($.type(this.require) === 'string') {
@@ -502,7 +501,7 @@ Step.prototype._onEvent = function (fn) {
         });
 
         if (this._eventElement && pattern && this.showNext) {
-            this.tour.$document.on('input.TourMcTourface.step.require', this._eventSelector, function (e) {
+            this.tour.$document.on('input' + Tour.namespace, this._eventSelector, function (e) {
                 var show = pattern.test(self._eventElement.val());
                 self.tour.showNext(show);
             });
@@ -510,7 +509,7 @@ Step.prototype._onEvent = function (fn) {
 
     } else if (fn === 'off') {
         this.tour.$document.off(namespacedEvent);
-        this.tour.$document.off('input.TourMcTourface.step.require');
+        this.tour.$document.off('input' + Tour.namespace);
     }
 
     return this;
@@ -579,7 +578,7 @@ Step.prototype.init = function () {
         existing: true,
         onceOnly: true
     }, function () {
-        self.tour.$document.trigger('tour.step.start', ['step.start', self.tour, self]);
+        self.tour.trigger('step.start');
         self._target('on')
             ._css('add')
             ._class('add')
@@ -614,14 +613,14 @@ Step.prototype.on = function () {
 };
 
 Step.prototype.off = function () {
-    this.tour.$document.trigger('tour.step.next', ['step.next', this.tour, this]);
-
     this._target('off')
         ._css('remove')
         ._class('remove')
         ._onBlur('off')
         ._onScroll('off')
         ._onEvent('off');
+
+    this.tour.trigger('step.stop');
 
     return this;
 };
