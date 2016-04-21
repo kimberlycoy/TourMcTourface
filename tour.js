@@ -412,13 +412,13 @@ Step.prototype.positionArrow = function () {
 
         } else if (containerPosition.description === 'bottom') {
             css.height = 70;
-
+            
         } else if (containerPosition.description === 'top') {
             css.transform = 'rotate(180deg)';
             css['transform-origin'] = '0 0';
             css.top = this._position.top - this.getMargin();
             css.height = 70;
-            css.left = css.left;
+            css.left = css.left; 
         }
 
         this.tour.$arrow.css(css);
@@ -505,7 +505,7 @@ Step.prototype._onEvent = function (fn) {
             tourVideo.on(namespacedEvent, function (e) {
                 setTimeout(function () {
                     self.tour.next();
-                }, 2000);
+                }, 1000);
             });
         } else {
             this.tour.$document.on(namespacedEvent, selector, function (e) {
