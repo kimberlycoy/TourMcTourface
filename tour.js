@@ -334,7 +334,12 @@ Step.prototype.positionContent = function () {
 
 Step.prototype.setContent = function () {
     this._content = this.content || this.description;
-    if (this._content) {
+    if (this.type === 'video') {
+        var videoContent = '<video id="myVideo" controls width="100%"><source src="' + this.content + '" type="video/mp4"></video>';
+
+        $('.tour-content').html(videoContent).show();
+        this._css('remove', this.tour.options.emptyStep.css);
+    } else if (this._content) {
         $('.tour-content').html(this._content).show();
         this._css('remove', this.tour.options.emptyStep.css);
     } else {
@@ -485,7 +490,7 @@ Step.prototype._focus = function () {
 
 Step.prototype._onEvent = function (fn) {
     var self = this;
-    var namespacedEvent = this.event + Tour.namespace; 
+    var namespacedEvent = this.event + Tour.namespace;
     var selector = this._eventType === 'custom' ? undefined : this._eventSelector;
     var pattern;
     if ($.type(this.require) === 'string') {
@@ -494,11 +499,19 @@ Step.prototype._onEvent = function (fn) {
 
     if (fn === 'on' && this.event && this.event !== 'next') {
 
-        this.tour.$document.on(namespacedEvent, selector, function (e) {
-            if (!pattern || pattern.test(self._eventElement.val())) {
-                self.tour.next();
-            }
-        });
+        if (this.type === 'video') {
+            $('.tour-content video').on(namespacedEvent, function (e) {
+                setTimeout(function () {
+                    self.tour.next();
+                }, 1000);
+            });
+        } else {
+            this.tour.$document.on(namespacedEvent, selector, function (e) {
+                if (!pattern || pattern.test(self._eventElement.val())) {
+                    self.tour.next();
+                }
+            });
+        }
 
         if (this._eventElement && pattern && this.showNext) {
             this.tour.$document.on('input' + Tour.namespace, this._eventSelector, function (e) {
@@ -508,6 +521,9 @@ Step.prototype._onEvent = function (fn) {
         }
 
     } else if (fn === 'off') {
+        if(this.type === 'video'){
+            $('.tour-content video').off(namespacedEvent);
+        }
         this.tour.$document.off(namespacedEvent);
         this.tour.$document.off('input' + Tour.namespace);
     }

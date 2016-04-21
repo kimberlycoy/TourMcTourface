@@ -15,6 +15,10 @@ $(function () {
             </div>
             `
     }, {
+        type: 'video',
+        content: "http://www.w3schools.com/html/mov_bbb.mp4",
+        event: 'ended'
+    }, {
         event: 'next',
         content: 'Welcome, click next',
         timeout: 1000
