@@ -493,7 +493,6 @@ Step.prototype._onEvent = function (fn) {
     var namespacedEvent = this.event + Tour.namespace;
     var selector = this._eventType === 'custom' ? undefined : this._eventSelector;
     var pattern;
-    var tourVideo;
     if ($.type(this.require) === 'string') {
         pattern = new RegExp(this.require);
     }
@@ -501,8 +500,7 @@ Step.prototype._onEvent = function (fn) {
     if (fn === 'on' && this.event && this.event !== 'next') {
 
         if (this.type === 'video') {
-            tourVideo = $('.tour-content video')
-            tourVideo.on(namespacedEvent, function (e) {
+            $('.tour-content video').on(namespacedEvent, function (e) {
                 setTimeout(function () {
                     self.tour.next();
                 }, 1000);
@@ -524,7 +522,7 @@ Step.prototype._onEvent = function (fn) {
 
     } else if (fn === 'off') {
         if(this.type === 'video'){
-            tourVideo.off(namespacedEvent);
+            $('.tour-content video').off(namespacedEvent);
         }
         this.tour.$document.off(namespacedEvent);
         this.tour.$document.off('input' + Tour.namespace);
