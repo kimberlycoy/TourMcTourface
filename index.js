@@ -32,21 +32,25 @@ $(function () {
         event: 'click',
         selector: '.dropdown-menu li:nth-child(2) a',
         content: 'Select "Another Action"',
-        css: [{
-            selector: '.dropdown, .dropdown *',
-            css: {
-                'pointer-events': 'none'
+        css: [
+            {
+                selector: '.dropdown, .dropdown *',
+                css: {
+                    'pointer-events': 'none'
+                }
+            }, {
+                selector: '.dropdown-menu li:nth-child(2) a',
+                css: {
+                    'pointer-events': 'auto'
+                }
             }
-        }, {
-            selector: '.dropdown-menu li:nth-child(2) a',
-            css: {
-                'pointer-events': 'auto'
+        ],
+        class: [
+            {
+                selector: '.dropdown', 
+                class: 'smith'
             }
-        }],
-        class: [{
-            selector: '.dropdown',
-            class: 'smith'
-        }]
+        ]
     }, {
         event: 'change',
         selector: 'input[type="checkbox"]',
@@ -81,7 +85,7 @@ $(function () {
         event: 'next',
         selector: '.three',
         position: 'top',
-        content: "Three. top short"
+        content: "Three. top short" 
     }, {
         event: 'next',
         selector: '.four',
@@ -118,10 +122,10 @@ $(function () {
         console.log('event:', e, t.i, step ? step.i : '');
     };
 
-    tour.on('start', logEvent);
-    tour.on('stop', logEvent);
-    tour.on('step.start', logEvent);
-    tour.on('step.stop', logEvent);
+    tour.on('start', logEvent); 
+    tour.on('stop', logEvent); 
+    tour.on('step.start', logEvent); 
+    tour.on('step.stop', logEvent); 
 
     tour.start();
 });
