@@ -505,6 +505,10 @@ Step.prototype._onEvent = function (fn) {
                     self.tour.next();
                 }, 1000);
             });
+        } else if (this.event === 'load' && this._eventSelector === 'document') {
+            this.tour.$document.ready(function () {
+                    self.tour.next();
+                });
         } else {
             this.tour.$document.on(namespacedEvent, selector, function (e) {
                 if (!pattern || pattern.test(self._eventElement.val())) {
