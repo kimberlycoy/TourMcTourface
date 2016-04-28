@@ -9,7 +9,7 @@ function Tour(options) {
         },
         scrollTo: {
             duration: 800,
-            offset: 10,
+            offset: { top: -10 },
             display: 500
         },
         reload: false
@@ -452,13 +452,12 @@ Step.prototype._scrollTo = function () {
 
     var self = this;
     var scrollTo = this.tour.options.scrollTo;
+    $.extend(scrollTo, $.isPlainObject(self.scrollTo) ? self.scrollTo : {});
 
     var element = self._element;
     if (self._isContainerPosition(/top.*/)) element = self.tour.$container;
     setTimeout(function () {
-        self.tour.$body.animate({
-            scrollTop: $(element).offset().top - scrollTo.offset
-        }, 800);
+        self.tour.$document.scrollTo(element, scrollTo);
     }, scrollTo.delay);
 }
 
