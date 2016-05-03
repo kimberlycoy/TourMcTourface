@@ -335,7 +335,7 @@ Step.prototype.positionContent = function () {
 Step.prototype.setContent = function () {
     this._content = this.content || this.description;
     if (this.type === 'video') {
-        var videoContent = '<video id="myVideo" controls width="100%"><source src="' + this.content + '" type="video/mp4"></video>';
+        var videoContent = '<video id="myVideo" controls width="100%" autoplay><source src="' + this.content + '" type="video/mp4"></video>';
 
         $('.tour-content').html(videoContent).show();
         this._css('remove', this.tour.options.emptyStep.css);
