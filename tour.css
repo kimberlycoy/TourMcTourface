@@ -30,7 +30,7 @@
     z-index: 2001;
     position: fixed;
     opacity: 0;
-    pointer-events: none;
+    //pointer-events: none;
 }
 
 .tour-arrow path {
@@ -96,7 +96,7 @@
 
 *:not(.tour-target),
 *:not(.tour-buttons button) {
-    pointer-events: none;
+    //pointer-events: none;
 }
 
 @media (max-width: 500px) {
