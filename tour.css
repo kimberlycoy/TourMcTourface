@@ -107,3 +107,12 @@
         display: none;
     }
 }
+
+@-webkit-keyframes glow {
+  from {
+    box-shadow: 0 0 0px rgba(52, 152, 219,0);
+  }
+  to {
+    box-shadow: 0 0 75px rgba(52, 152, 219,1.0)
+  }
+}
