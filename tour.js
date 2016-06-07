@@ -326,6 +326,7 @@ Step.prototype.positionContent = function () {
         this.tour.$container.css({
             top: '50%',
             left: '50%',
+            right: 'auto',
             transform: 'translate(-50%, -50%)'
         });
     }
