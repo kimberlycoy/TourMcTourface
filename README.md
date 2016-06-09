@@ -28,7 +28,8 @@ Add the following to your html.
 - margin: The margin around the selector element, default 0. (optional)
 - position: left | right | bottom or css object. (optional)
 - focus: Set the focus on the selector element, default:true. (optional)
-- require:
+- autoNext : Timeout in ms (autoAdvance : 5000) (optional)
+- afterRefresh : Set "true" to refresh the browser window (default: false)
 
 ##### Custom Events
 ```javascript

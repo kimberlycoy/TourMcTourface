@@ -542,6 +542,16 @@ Step.prototype._showNext = function () {
     return this;
 };
 
+Step.prototype.doAutoNext = function(){
+    if(!this.autoNext) return this;
+    var self = this;
+
+    setTimeout(function(){
+        self.tour.next();
+    }, this.autoNext);
+
+    return this;
+};
 
 Step.prototype._css = function (fn, css) {
     css = css || this.css;
@@ -610,7 +620,8 @@ Step.prototype.init = function () {
             ._showNext()
             .positionContent()
             .positionArrow()
-            ._scrollTo();
+            ._scrollTo()
+            .doAutoNext();
     });
 
     self._onScroll('on')
@@ -642,6 +653,10 @@ Step.prototype.off = function () {
         ._onEvent('off');
 
     this.tour.trigger('step.stop');
+
+    if(this.afterRefresh){
+        location.reload();
+    }
 
     return this;
 };

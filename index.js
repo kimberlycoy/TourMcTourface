@@ -112,6 +112,10 @@ $(function () {
         selector: '.six-container',
         position: 'top-right',
         content: 'position:top-right'
+    },{
+        content: 'This will automatically advance in 5 seconds, and refresh the page',
+        autoNext:5000,
+        afterRefresh:true
     }];
 
     var tour = new Tour({
