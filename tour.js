@@ -451,7 +451,7 @@ Step.prototype.setPosition = function () {
 };
 
 Step.prototype._scrollTo = function () {
-    if (!this._element || this.scrollTo === false) return this;
+    if (!(this._element || this.scrollTo)) return this;
 
     var self = this;
     var scrollTo = this.tour.options.scrollTo;
@@ -460,12 +460,7 @@ Step.prototype._scrollTo = function () {
     var element = self._element;
     if (self._isContainerPosition(/top.*/)) element = self.tour.$container;
     setTimeout(function () {
-        try {
-            self.tour.$document.scrollTo(element, scrollTo);
-        } catch (e) {
-            console.log('Ignoring error (scrollTo):', e);
-            console.log('self.tour.$document.scrollTo:', self.tour.$document.scrollTo);
-        }
+        self.tour.$document.scrollTo(element, scrollTo);
     }, scrollTo.delay);
 
     return this;
