@@ -142,7 +142,7 @@ Tour.prototype.stop = function () {
     this.$arrow.css({ opacity: 0 });
     $('.tour-overlay').css({ opacity: 0 });
     setTimeout(function () {
-        self.$document = $(document)
+        self.$document = $(document);
         self.$container.remove();
         self.$arrow.remove();
         $('.tour-overlay').remove();
@@ -280,6 +280,8 @@ Step.prototype._isContainerPosition = function (desc) {
 };
 
 Step.prototype.positionContent = function () {
+    var height, width;
+
     if (this.selector) {
         this._containerPosition = {
             top: this._position.bottom + 75 + this.getMargin(),
@@ -296,21 +298,21 @@ Step.prototype.positionContent = function () {
             this._containerPosition.right = this._position.center.right + 100;
 
         } else if (this._isContainerPosition('top')) {
-            var height = this.tour.$container.height();
+            height = this.tour.$container.height();
             this._containerPosition.top = this._position.top - height - 85 - this.getMargin();
             this._containerPosition.left = this._position.center.left;
             this._containerPosition.transform = 'translateX(-50%)';
 
         } else if (this._isContainerPosition('top-right')) {
-            var height = this.tour.$container.height();
+            height = this.tour.$container.height();
             this._containerPosition.top = this._position.top - height - 85 - this.getMargin();
             this._containerPosition.left = this._position.center.left + 100;
 
         } else if (this._isContainerPosition('top-left')) {
-            var height = this.tour.$container.height();
-            var width = this.tour.$container.width();
+            height = this.tour.$container.height();
+            width = this.tour.$container.width();
             this._containerPosition.top = this._position.top - height - 85 - this.getMargin();
-            // this._containerPosition.right = this._position.center.right + width/2; 
+            // this._containerPosition.right = this._position.center.right + width/2;
             this._containerPosition.right = this._position.center.right + 100;
 
         } else if (this._isContainerPosition('custom')) {
@@ -365,7 +367,7 @@ Step.prototype._target = function (fn) {
             this._focus();
         }
 
-        this._eventType = this.eventType || this.event_type
+        this._eventType = this.eventType || this.event_type;
 
     } else {
 
@@ -409,7 +411,7 @@ Step.prototype.positionArrow = function () {
             css.transform = 'rotate(180deg)';
             css['transform-origin'] = '0 0';
             css.top = this._position.top - this.getMargin();
-            css.left += 10
+            css.left += 10;
 
         } else if (containerPosition.description === 'bottom') {
             css.height = 70;
@@ -441,7 +443,7 @@ Step.prototype.setPosition = function () {
         this._position.center = {
             right: this.view.width - this._position.right + this._position.widthHalf,
             left: this._position.left + this._position.widthHalf
-        }
+        };
     } else {
         this._position = { top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0 };
     }
@@ -458,9 +460,16 @@ Step.prototype._scrollTo = function () {
     var element = self._element;
     if (self._isContainerPosition(/top.*/)) element = self.tour.$container;
     setTimeout(function () {
-        self.tour.$document.scrollTo(element, scrollTo);
+        try {
+            self.tour.$document.scrollTo(element, scrollTo);
+        } catch (e) {
+            console.log('Ignoring error (scrollTo):', e);
+            console.log('self.tour.$document.scrollTo:', self.tour.$document.scrollTo);
+        }
     }, scrollTo.delay);
-}
+
+    return this;
+};
 
 Step.prototype._onScroll = function (fn) {
     var self = this;
@@ -487,7 +496,7 @@ Step.prototype._onScroll = function (fn) {
 
 Step.prototype._focus = function () {
     if (this.focus !== false && this._eventElement) this._eventElement.focus();
-}
+};
 
 Step.prototype._onEvent = function (fn) {
     var self = this;
